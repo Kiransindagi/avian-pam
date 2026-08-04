@@ -1,7 +1,9 @@
+from pathlib import Path
+
+import numpy as np
 import pytest
 import soundfile as sf
-import numpy as np
-from pathlib import Path
+
 from src.config.schema import AppConfig
 from src.data.validator import AudioValidator
 

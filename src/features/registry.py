@@ -1,4 +1,5 @@
-from typing import Dict, Type, List, Any
+from typing import Any, Dict, List, Type
+
 from src.features.base import BaseFeatureExtractor
 from src.utils.logging import setup_logger
 

@@ -4,7 +4,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import wave
+
 import numpy as np
+
 from src.config.schema import AppConfig
 from src.inference.submission import BioDCASESubmissionGenerator
 

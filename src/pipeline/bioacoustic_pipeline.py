@@ -1,28 +1,26 @@
 import time
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
 import librosa
 import pandas as pd
-from pathlib import Path
-from typing import List, Optional, Dict, Any, Tuple
 
 from src.config.schema import AppConfig
-from src.config.schemas import (
-    ValidationContract,
-    FeatureRecordContract,
-)
-from src.data.validator import AudioValidator
+from src.config.schemas import FeatureRecordContract, ValidationContract
 from src.data.preprocessing import AudioPreprocessor
+from src.data.validator import AudioValidator
 from src.data.versioning import DatasetVersionManager
-from src.visualization.eda_generator import EDAGenerator
-from src.features.registry import get_extractor
-from src.features.feature_store import FeatureStore
-from src.features.quality_analyzer import FeatureQualityAnalyzer
-from src.features.selection import get_feature_selector
-from src.models.artifact_registry import ArtifactRegistry
 from src.evaluation.benchmark import PipelineTelemetry
 from src.evaluation.feature_benchmark import FeatureBenchmarkSuite
+from src.features.feature_store import FeatureStore
+from src.features.quality_analyzer import FeatureQualityAnalyzer
+from src.features.registry import get_extractor
+from src.features.selection import get_feature_selector
+from src.models.artifact_registry import ArtifactRegistry
 from src.utils.diagram_generator import generate_architecture_svg
 from src.utils.io import ensure_dir
 from src.utils.logging import setup_logger
+from src.visualization.eda_generator import EDAGenerator
 from src.visualization.feature_plots import FeaturePlotter
 
 

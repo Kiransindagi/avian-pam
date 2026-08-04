@@ -1,12 +1,13 @@
 import os
 import tempfile
 from pathlib import Path
-from fastapi import FastAPI, File, UploadFile, HTTPException
+
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from pydantic import BaseModel
 
 from src.config.schema import AppConfig
-from src.inference.engine import AvianInferenceEngine
 from src.features.registry import list_registered_extractors
+from src.inference.engine import AvianInferenceEngine
 from src.models.model_registry import list_registered_models
 from src.utils.logging import setup_logger
 

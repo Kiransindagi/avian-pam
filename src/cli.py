@@ -1,6 +1,7 @@
 import argparse
 import sys
 from pathlib import Path
+
 from src.config.schema import AppConfig
 from src.data.dummy_generator import generate_dummy_dataset
 from src.pipeline import BioAcousticPipeline

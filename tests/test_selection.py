@@ -1,5 +1,6 @@
 import pandas as pd
-from src.features.selection import VarianceThresholdSelector, CorrelationFilterSelector
+
+from src.features.selection import CorrelationFilterSelector, VarianceThresholdSelector
 
 
 def test_feature_selection():

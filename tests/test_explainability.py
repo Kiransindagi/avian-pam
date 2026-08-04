@@ -1,8 +1,9 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
+
 from src.config.schema import AppConfig
-from src.models.trees import RandomForestModel
 from src.evaluation.explainability import ExplainabilityEngine
+from src.models.trees import RandomForestModel
 
 
 def test_explainability_engine(tmp_path):

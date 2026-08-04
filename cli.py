@@ -1,13 +1,13 @@
-import sys
 import argparse
+import sys
 from pathlib import Path
 
 from src.config.schema import AppConfig
-from src.pipeline import BioAcousticPipeline
-from src.training.trainer import ModelTrainer
 from src.evaluation.reporter import MasterResearchEvaluator
 from src.inference.engine import AvianInferenceEngine
 from src.inference.submission import BioDCASESubmissionGenerator
+from src.pipeline import BioAcousticPipeline
+from src.training.trainer import ModelTrainer
 from src.utils.logging import setup_logger
 
 logger = setup_logger("Unified_CLI")

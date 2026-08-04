@@ -1,9 +1,11 @@
+from typing import Any, Dict, List, Optional
+
 import numpy as np
 import pandas as pd
-from typing import Dict, Any, List, Optional
-from sklearn.model_selection import KFold, GroupKFold, LeaveOneGroupOut
-from src.models.base_model import BaseAvianModel
+from sklearn.model_selection import GroupKFold, KFold, LeaveOneGroupOut
+
 from src.evaluation.metrics import compute_avian_metrics
+from src.models.base_model import BaseAvianModel
 from src.utils.logging import setup_logger
 
 logger = setup_logger("CrossValidationEngine")

@@ -1,5 +1,6 @@
-import pytest
 import numpy as np
+import pytest
+
 from src.config.schema import AppConfig
 from src.data.preprocessing import AudioPreprocessor
 

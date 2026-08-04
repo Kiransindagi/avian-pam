@@ -1,8 +1,6 @@
 import numpy as np
-from src.models import (
-    list_registered_models,
-    RandomForestModel,
-)
+
+from src.models import RandomForestModel, list_registered_models
 
 
 def test_registered_models_exist():

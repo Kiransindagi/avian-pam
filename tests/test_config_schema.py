@@ -1,10 +1,9 @@
-import pytest
 from pathlib import Path
+
+import pytest
 from pydantic import ValidationError
-from src.config.schemas import (
-    AudioFileContract,
-    FeatureRecordContract,
-)
+
+from src.config.schemas import AudioFileContract, FeatureRecordContract
 
 
 def test_audio_file_contract_valid():

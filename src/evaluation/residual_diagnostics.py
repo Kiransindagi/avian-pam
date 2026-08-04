@@ -1,6 +1,7 @@
+from typing import Any, Dict
+
 import numpy as np
 from scipy import stats
-from typing import Dict, Any
 
 
 def evaluate_residual_diagnostics(

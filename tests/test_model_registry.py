@@ -1,4 +1,5 @@
 import numpy as np
+
 from src.config.schema import AppConfig
 from src.models.baselines import RidgeRegressionModel
 from src.models.model_registry import ModelRegistryManager

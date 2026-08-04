@@ -1,7 +1,7 @@
-import sys
 import cProfile
-import pstats
 import io
+import pstats
+import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))

@@ -4,6 +4,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import argparse
+
 from src.config.schema import AppConfig
 from src.evaluation.reporter import MasterResearchEvaluator
 from src.utils.logging import setup_logger

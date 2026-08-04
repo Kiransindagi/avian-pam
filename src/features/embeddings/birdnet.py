@@ -1,7 +1,9 @@
+from typing import Any, Dict, List
+
 import numpy as np
-from typing import List, Dict, Any
-from src.features.embeddings.base import BaseAudioEmbedder
+
 from src.features.base import BaseFeatureExtractor
+from src.features.embeddings.base import BaseAudioEmbedder
 from src.features.registry import register_extractor
 from src.utils.logging import setup_logger
 

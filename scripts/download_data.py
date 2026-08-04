@@ -4,6 +4,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import argparse
+
 from src.config.schema import AppConfig
 from src.data.dummy_generator import AudioDummyDatasetGenerator
 from src.utils.logging import setup_logger

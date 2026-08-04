@@ -5,6 +5,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import pytest
+
 from src.utils.logging import setup_logger
 
 logger = setup_logger("Script_RunTests")

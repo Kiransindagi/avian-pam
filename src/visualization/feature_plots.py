@@ -1,13 +1,15 @@
 import matplotlib
 
 matplotlib.use("Agg")
+from typing import List, Optional
+
 import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
 import pandas as pd
-from typing import Optional, List
+import seaborn as sns
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
+
 from src.config.schema import AppConfig
 from src.utils.io import ensure_dir
 from src.utils.logging import setup_logger

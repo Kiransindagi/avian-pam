@@ -1,10 +1,12 @@
 import json
 import os
 import time
-import psutil
-import numpy as np
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Any, Dict, List
+
+import numpy as np
+import psutil
+
 from src.config.schema import AppConfig
 from src.features.base import BaseFeatureExtractor
 from src.utils.io import ensure_dir

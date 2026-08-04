@@ -1,4 +1,5 @@
 import numpy as np
+
 from src.features.dsp_extractor import DSPFeatureExtractor
 from src.features.embeddings import BirdNETExtractorPlugin
 

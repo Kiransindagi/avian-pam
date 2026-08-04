@@ -1,8 +1,9 @@
 import numpy as np
+
 from src.features.embeddings import (
     BirdNETEmbedder,
-    PANNsEmbedder,
     EmbeddingCacheManager,
+    PANNsEmbedder,
 )
 
 

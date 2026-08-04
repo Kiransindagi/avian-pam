@@ -1,5 +1,6 @@
-import soundfile as sf
 import numpy as np
+import soundfile as sf
+
 from src.config.schema import AppConfig
 from src.data.versioning import DatasetVersionManager
 

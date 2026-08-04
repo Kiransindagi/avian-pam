@@ -1,7 +1,9 @@
+from typing import Any, Dict, List
+
 import librosa
 import numpy as np
 import scipy.stats as stats
-from typing import Dict, Any, List
+
 from src.features.base import BaseFeatureExtractor
 from src.features.registry import register_extractor
 

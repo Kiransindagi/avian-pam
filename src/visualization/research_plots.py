@@ -1,12 +1,14 @@
 import matplotlib
 
 matplotlib.use("Agg")
+from typing import List
+
 import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
 import pandas as pd
+import seaborn as sns
 from scipy import stats
-from typing import List
+
 from src.config.schema import AppConfig
 from src.utils.io import ensure_dir
 from src.utils.logging import setup_logger
