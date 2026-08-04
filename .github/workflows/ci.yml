@@ -35,9 +35,11 @@ jobs:
       - name: Generate Dummy Dataset & Test Pipeline Startup
         run: |
           python -m src.cli --generate-dummy
-          python cli.py pipeline --config configs/development.yaml
+          python cli.py --config configs/development.yaml pipeline
+
 
 
       - name: Run Pytest Test Suite
         run: |
-          pytest tests/ -v
+          PYTHONPATH=. pytest tests/ -v
+

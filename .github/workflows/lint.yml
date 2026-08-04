@@ -23,8 +23,9 @@ jobs:
 
       - name: Code Formatting Check (Black & Isort)
         run: |
-          black --check src tests scripts
+          black --fast --check src tests scripts
           isort --profile black --check-only src tests scripts
+
 
 
       - name: Lint with Flake8
