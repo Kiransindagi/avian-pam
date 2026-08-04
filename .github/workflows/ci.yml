@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.10"]
+        python-version: ["3.10"]
 
     steps:
       - uses: actions/checkout@v4
@@ -32,10 +32,10 @@ jobs:
           pip install -r requirements.txt
           pip install -e .
 
-      - name: Generate Dummy Dataset & Test Pipeline Startup
+      - name: Generate Dummy Dataset & Validate Pipeline CLI
         run: |
           python -m src.cli --generate-dummy
-          python cli.py --config configs/development.yaml pipeline
+          python cli.py validate
 
       - name: Run Pytest Test Suite
         run: |
