@@ -1,41 +1,35 @@
 # Python
 __pycache__/
-*.pyc
+*.py[cod]
 .pytest_cache/
+.ruff_cache/
 .coverage
 htmlcov/
-
 
 # Logs
 logs/
 *.log
 
-# Runtime
-cache/
-outputs/
-mlruns/
-artifacts/
-checkpoints/
+# ML Root Outputs
+/models/
+/artifacts/
+/mlruns/
+/checkpoints/
 
-# Data
-data/processed/
+# Generated data
 data/feature_store/*
 !data/feature_store/.gitkeep
+data/processed/
 
 # Reports
 reports/*.json
 reports/*.csv
-
-# Models
-models/
-*.joblib
-*.pkl
-*.onnx
-*.pt
+reports/*.log
 
 # Submissions
 submissions/*
 !submissions/.gitkeep
+!submissions/example_submission.csv
 
 # Notebook
 .ipynb_checkpoints/
@@ -47,3 +41,7 @@ submissions/*
 # OS
 .DS_Store
 Thumbs.db
+
+# Environment
+.venv/
+.env
