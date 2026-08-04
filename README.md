@@ -40,14 +40,8 @@ The project includes a complete production deployment demonstration showing:
 - JSON prediction response
 
 <p align="center">
-
-<a href="https://github.com/Kiransindagi/avian-pam">
-<img src="docs/architecture.svg" width="900" alt="Project Demo"/>
-</a>
-
+  <video src="docs/demo.mp4" controls width="100%"></video>
 </p>
-
-**Click the image above to watch the complete 3-minute demonstration.**
 
 
 ---
