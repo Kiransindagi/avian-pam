@@ -16,6 +16,6 @@
 | **Mean Absolute Percentage Error (MAPE)** | **0.00%** | — |
 | **Coefficient of Determination ($R^2$)** | **1.0000** | — |
 | **Pearson Correlation ($r$)** | **1.0000** ($p = 0.0000$) | — |
-| **Spearman Correlation ($ho$)** | **0.9878** ($p = 0.0000$) | — |
+| **Spearman Correlation ($ho$)** | **0.9938** ($p = 0.0000$) | — |
 | **Prediction Bias** | **-0.0000** | — |
 | **Prediction Variance** | **4.5600** | — |

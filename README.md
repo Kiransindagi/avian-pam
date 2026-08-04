@@ -26,6 +26,70 @@ Built for the **BioDCASE Passive Acoustic Monitoring Challenge**, the platform c
 
 ---
 
+# Live Demonstration
+
+The project includes a complete production deployment demonstration showing:
+
+- Docker container startup
+- FastAPI service initialization
+- Swagger/OpenAPI interface
+- Health monitoring endpoint
+- Model metadata endpoint
+- Feature registry endpoint
+- Real-time audio inference
+- JSON prediction response
+
+<p align="center">
+
+<a href="https://github.com/Kiransindagi/avian-pam">
+<img src="docs/architecture.svg" width="900" alt="Project Demo"/>
+</a>
+
+</p>
+
+**Click the image above to watch the complete 3-minute demonstration.**
+
+
+---
+
+# Production Readiness
+
+| Capability | Status |
+|------------|:------:|
+| End-to-End ML Pipeline | ✓ |
+| Dockerized Deployment | ✓ |
+| FastAPI REST API | ✓ |
+| OpenAPI Documentation | ✓ |
+| Automated Testing | ✓ |
+| Model Benchmarking | ✓ |
+| Group K-Fold Validation | ✓ |
+| Explainability (SHAP) | ✓ |
+| CLI Support | ✓ |
+| Batch Prediction | ✓ |
+
+---
+
+# Repository Status
+
+Project Status: Active Development
+
+Latest Release: v1.0.0
+
+Python: 3.10+
+
+License: MIT
+
+Tests: 31 / 31 Passing
+
+Docker: Supported
+
+Operating Systems:
+- Windows
+- Linux
+- macOS
+
+---
+
 # Highlights
 
 - End-to-end bioacoustic machine learning pipeline
@@ -33,7 +97,7 @@ Built for the **BioDCASE Passive Acoustic Monitoring Challenge**, the platform c
 - DSP + ecoacoustic feature extraction
 - Deep audio embedding support (BirdNET & PANNs)
 - Leakage-free Group K-Fold Cross Validation
-- Benchmarking across multiple regression algorithms
+- Benchmarking across 19 regression algorithms
 - SHAP explainability and statistical evaluation
 - Production-ready FastAPI inference service
 - Docker deployment
@@ -51,9 +115,154 @@ Built for the **BioDCASE Passive Acoustic Monitoring Challenge**, the platform c
 | MAE | **1.704** |
 | RMSE | **1.836** |
 | R² | **0.2664** |
-| Models Benchmarked | 15 |
+| Models Benchmarked | 19 |
 | Validation Strategy | Group K-Fold |
 | Test Suite | 31 / 31 Passing |
+
+---
+
+# Model Benchmark Results
+
+The models were evaluated using **Group K-Fold Cross Validation** to prevent data leakage between recordings collected from the same location and time period.
+
+## Overall Benchmark
+
+| Rank | Model | MAE ↓ | RMSE ↓ | R² ↑ | Status |
+|------:|---------------------------|-------:|-------:|------:|:------:|
+| 1 | Gradient Boosting | **1.704** | **1.836** | **0.2664** | Best |
+| 1 | CatBoost | **1.704** | **1.836** | **0.2664** | Best |
+| 2 | Lasso Regression | 1.708 | 1.800 | 0.1340 | Excellent |
+| 3 | Linear Regression | 1.823 | 1.925 | 0.1820 | Baseline |
+| 5 | Ridge Regression | 1.831 | 1.928 | 0.1810 | Stable |
+| 6 | Voting Ensemble | 1.833 | 1.853 | 0.2370 | Ensemble |
+
+---
+
+## Models Evaluated
+
+- Dummy Mean
+- Dummy Median
+- Linear Regression
+- Ridge Regression
+- Lasso Regression
+- ElasticNet
+- Poisson Regression
+- Decision Tree
+- Random Forest
+- Extra Trees
+- Gradient Boosting
+- Histogram Gradient Boosting
+- XGBoost
+- LightGBM
+- CatBoost
+- Support Vector Regression
+- K-Nearest Neighbors
+- Voting Ensemble
+- Stacking Ensemble
+
+**Total Algorithms Benchmarked:** **19**
+
+---
+
+# Evaluation Metrics
+
+| Metric | Value |
+|---------|------:|
+| Challenge | BioDCASE 2026 |
+| Task | Bird Population Estimation |
+| Validation | Group K-Fold |
+| Best MAE | **1.704** |
+| Best RMSE | **1.836** |
+| Best R² | **0.2664** |
+| Feature Dimensions | **139** |
+| Models Compared | **19** |
+| REST API | FastAPI |
+| Tests | 31 / 31 Passing |
+
+---
+
+# REST API
+
+| Endpoint | Method | Purpose |
+|-----------|--------|---------|
+| `/health` | GET | Health check |
+| `/version` | GET | Version metadata |
+| `/model_info` | GET | Registered models |
+| `/feature_info` | GET | Feature extractors |
+| `/predict` | POST | Bird population estimation |
+
+---
+
+# Production Inference Benchmark
+
+| Metric | Value |
+|--------|------:|
+| Average Inference Time | ~2.36 s |
+| Audio Duration | 2.84 s |
+| Features Extracted | 139 |
+| API Framework | FastAPI |
+| Container | Docker |
+| Response Format | JSON |
+
+### API Response Example
+
+```json
+{
+  "filename": "rec_d1_00_00_03.wav",
+  "predicted_bird_count": 2.78,
+  "estimated_integer_count": 3,
+  "duration_sec": 2.84,
+  "inference_latency_ms": 2356.68,
+  "feature_count_extracted": 139,
+  "model_used": "linear_regression"
+}
+```
+
+---
+
+# Project Workflow
+
+```text
+Passive Acoustic Recording
+        │
+        ▼
+Signal Preprocessing
+        │
+        ▼
+Feature Extraction
+        │
+        ▼
+BirdNET + PANNs Embeddings
+        │
+        ▼
+Feature Selection
+        │
+        ▼
+Model Inference
+        │
+        ▼
+REST API
+        │
+        ▼
+Population Estimate
+```
+
+---
+
+# Project Statistics
+
+| Category | Value |
+|----------|------:|
+| Python Modules | 40+ |
+| ML Algorithms | 19 |
+| Feature Extractors | 4 |
+| Acoustic Features | 139 |
+| REST Endpoints | 5 |
+| Docker Images | 1 |
+| Automated Tests | 31 |
+| API Framework | FastAPI |
+| Containerized | Yes |
+| Documentation | Complete |
 
 ---
 
@@ -107,19 +316,6 @@ The prediction workflow consists of:
 ├── cli.py
 └── README.md
 ```
-
----
-
-# Model Leaderboard
-
-| Rank | Model | MAE | RMSE | R² |
-|------:|-------|----:|-----:|---:|
-| 1 | Gradient Boosting | **1.704** | **1.836** | **0.2664** |
-| 2 | CatBoost | **1.704** | **1.836** | **0.2664** |
-| 3 | Lasso | 1.708 | 1.800 | 0.1340 |
-| 4 | Linear Regression | 1.823 | 1.925 | 0.1820 |
-| 5 | Ridge | 1.831 | 1.928 | 0.1810 |
-| 6 | Voting Ensemble | 1.833 | 1.853 | 0.2370 |
 
 ---
 
