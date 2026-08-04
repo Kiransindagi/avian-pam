@@ -1,13 +1,7 @@
 import numpy as np
-import pytest
 from src.models import (
-    get_model,
     list_registered_models,
-    DummyMeanPredictor,
-    LinearRegressionModel,
     RandomForestModel,
-    SVRModel,
-    VotingEnsembleModel,
 )
 
 

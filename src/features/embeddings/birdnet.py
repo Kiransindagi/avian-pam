@@ -29,14 +29,17 @@ class BirdNETEmbedder(BaseAudioEmbedder):
             return np.zeros(self._dim, dtype=np.float32)
 
         # Deterministic acoustic embedding fallback based on spectral energy distribution
-        rng = np.random.RandomState(int(abs(y[0]) * 1e6) % (2**31 - 1) if len(y) > 0 else 42)
-        base_features = np.array([
-            np.mean(y**2), np.std(y), np.max(np.abs(y)), np.sum(np.abs(y))
-        ], dtype=np.float32)
+        rng = np.random.RandomState(
+            int(abs(y[0]) * 1e6) % (2**31 - 1) if len(y) > 0 else 42
+        )
+        base_features = np.array(
+            [np.mean(y**2), np.std(y), np.max(np.abs(y)), np.sum(np.abs(y))],
+            dtype=np.float32,
+        )
 
         # Expand projection vector
         simulated_emb = rng.randn(self._dim).astype(np.float32) * 0.1
-        simulated_emb[:len(base_features)] += base_features
+        simulated_emb[: len(base_features)] += base_features
         return simulated_emb
 
 

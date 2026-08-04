@@ -1,7 +1,6 @@
 import os
 import tempfile
 from pathlib import Path
-from typing import Dict, Any, List
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from pydantic import BaseModel
 
@@ -86,9 +85,14 @@ def get_feature_info():
 async def predict_audio(file: UploadFile = File(...)):
     """Predicts bird count for an uploaded audio file (.wav, .flac, .mp3)."""
     if not file.filename.endswith((".wav", ".flac", ".ogg", ".mp3")):
-        raise HTTPException(status_code=400, detail="Invalid audio file format. Must be .wav, .flac, .ogg, or .mp3.")
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid audio file format. Must be .wav, .flac, .ogg, or .mp3.",
+        )
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix=Path(file.filename).suffix) as tmp:
+    with tempfile.NamedTemporaryFile(
+        delete=False, suffix=Path(file.filename).suffix
+    ) as tmp:
         content = await file.read()
         tmp.write(content)
         tmp_path = tmp.name

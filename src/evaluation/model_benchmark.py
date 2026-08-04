@@ -1,9 +1,8 @@
 import os
 import psutil
 import pandas as pd
-import numpy as np
 from pathlib import Path
-from typing import Dict, Any, List, Optional, Tuple
+from typing import List, Optional, Tuple
 from src.config.schema import AppConfig
 from src.models.base_model import BaseAvianModel
 from src.training.cross_validation import CrossValidationEngine
@@ -32,25 +31,29 @@ class ModelBenchmarker:
         """Evaluates and benchmarks multiple ML models, generating CSV leaderboard and markdown report."""
         leaderboard_rows = []
 
-        logger.info(f"Benchmarking {len(models)} models across cross-validation splits...")
+        logger.info(
+            f"Benchmarking {len(models)} models across cross-validation splits..."
+        )
 
         for model in models:
             mem_before = self.process.memory_info().rss / (1024 * 1024)
             cv_res = self.cv_engine.evaluate_model(model, X, y, groups=groups)
             mem_after = self.process.memory_info().rss / (1024 * 1024)
 
-            leaderboard_rows.append({
-                "model_name": model.name,
-                "version": model.version,
-                "cv_mae_mean": cv_res["mean_mae"],
-                "cv_mae_std": cv_res["std_mae"],
-                "cv_rmse_mean": cv_res["mean_rmse"],
-                "cv_rmse_std": cv_res["std_rmse"],
-                "r2_score": cv_res["overall_r2"],
-                "training_time_sec": round(model.training_time_sec, 4),
-                "inference_latency_ms": round(model.inference_latency_ms, 3),
-                "memory_rss_mb": round(max(0.0, mem_after - mem_before), 2),
-            })
+            leaderboard_rows.append(
+                {
+                    "model_name": model.name,
+                    "version": model.version,
+                    "cv_mae_mean": cv_res["mean_mae"],
+                    "cv_mae_std": cv_res["std_mae"],
+                    "cv_rmse_mean": cv_res["mean_rmse"],
+                    "cv_rmse_std": cv_res["std_rmse"],
+                    "r2_score": cv_res["overall_r2"],
+                    "training_time_sec": round(model.training_time_sec, 4),
+                    "inference_latency_ms": round(model.inference_latency_ms, 3),
+                    "memory_rss_mb": round(max(0.0, mem_after - mem_before), 2),
+                }
+            )
 
         df_leaderboard = pd.DataFrame(leaderboard_rows)
         df_leaderboard.sort_values(by="cv_mae_mean", ascending=True, inplace=True)

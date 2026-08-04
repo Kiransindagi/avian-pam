@@ -1,18 +1,16 @@
 import pandas as pd
 import numpy as np
 from pathlib import Path
-from typing import Dict, Any, List, Optional, Tuple
+from typing import List, Optional, Tuple
 
 from src.config.schema import AppConfig
-from src.models.model_registry import get_model, list_registered_models
+from src.models.model_registry import get_model
 from src.models.base_model import BaseAvianModel
 from src.training.cross_validation import CrossValidationEngine
-from src.training.optimizer import HyperparameterOptimizer
 from src.models.model_registry import ModelRegistryManager
 from src.training.tracker import ExperimentTracker
 from src.evaluation.model_benchmark import ModelBenchmarker
 from src.visualization.model_plots import ModelPlotter
-from src.utils.io import ensure_dir
 from src.utils.logging import setup_logger
 
 logger = setup_logger("ModelTrainer")
@@ -29,13 +27,17 @@ class ModelTrainer:
         self.plotter = ModelPlotter(config)
         self.cv_engine = CrossValidationEngine(strategy="group_kfold", n_splits=3)
 
-    def load_latest_features(self) -> Tuple[pd.DataFrame, pd.Series, Optional[pd.Series]]:
+    def load_latest_features(
+        self,
+    ) -> Tuple[pd.DataFrame, pd.Series, Optional[pd.Series]]:
         """Loads normalized features and target counts from Feature Store v2."""
         feature_store_dir = Path(self.config.paths.feature_store_dir)
         parquet_files = sorted(list(feature_store_dir.glob("*_norm_*.parquet")))
 
         if not parquet_files:
-            logger.warning(f"No normalized parquet features found in '{feature_store_dir}'. Using dummy feature generator.")
+            logger.warning(
+                f"No normalized parquet features found in '{feature_store_dir}'. Using dummy feature generator."
+            )
             return self._generate_dummy_features()
 
         latest_parquet = parquet_files[-1]
@@ -43,20 +45,32 @@ class ModelTrainer:
         df = pd.read_parquet(latest_parquet)
 
         meta_cols = ["file_path", "filename", "species", "bird_count"]
-        feature_cols = [c for c in df.columns if c not in meta_cols and np.issubdtype(df[c].dtype, np.number)]
+        feature_cols = [
+            c
+            for c in df.columns
+            if c not in meta_cols and np.issubdtype(df[c].dtype, np.number)
+        ]
 
         X = df[feature_cols].fillna(0)
-        y = df["bird_count"] if "bird_count" in df.columns else pd.Series(np.random.randint(1, 10, size=len(df)))
+        y = (
+            df["bird_count"]
+            if "bird_count" in df.columns
+            else pd.Series(np.random.randint(1, 10, size=len(df)))
+        )
         groups = df["species"] if "species" in df.columns else None
 
         return X, y, groups
 
-    def _generate_dummy_features(self) -> Tuple[pd.DataFrame, pd.Series, Optional[pd.Series]]:
+    def _generate_dummy_features(
+        self,
+    ) -> Tuple[pd.DataFrame, pd.Series, Optional[pd.Series]]:
         rng = np.random.RandomState(42)
         n_samples = 20
         X = pd.DataFrame({f"feature_{i}": rng.randn(n_samples) for i in range(10)})
         y = pd.Series(rng.randint(1, 15, size=n_samples), name="bird_count")
-        groups = pd.Series([f"species_{i % 3}" for i in range(n_samples)], name="species")
+        groups = pd.Series(
+            [f"species_{i % 3}" for i in range(n_samples)], name="species"
+        )
         return X, y, groups
 
     def train_and_evaluate_all_models(self) -> pd.DataFrame:
@@ -102,7 +116,9 @@ class ModelTrainer:
                 self.experiment_tracker.log_experiment_run(
                     experiment_id=f"exp_sprint3_{name}",
                     model_name=name,
-                    hyperparameters=model_inst.get_parameters().get("hyperparameters", {}),
+                    hyperparameters=model_inst.get_parameters().get(
+                        "hyperparameters", {}
+                    ),
                     metrics=cv_res,
                     dataset_version=self.config.project.version,
                 )
@@ -111,7 +127,9 @@ class ModelTrainer:
                 logger.error(f"Failed model training for '{name}': {e}")
 
         # Benchmark Models & Render Leaderboard
-        df_leaderboard, _ = self.benchmarker.benchmark_models(instantiated_models, X, y, groups=groups)
+        df_leaderboard, _ = self.benchmarker.benchmark_models(
+            instantiated_models, X, y, groups=groups
+        )
 
         # Generate Visualizations
         if instantiated_models:

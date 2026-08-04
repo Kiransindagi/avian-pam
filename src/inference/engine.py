@@ -3,15 +3,13 @@ import librosa
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from typing import Dict, Any, List, Optional, Union
+from typing import Dict, Any, Optional, Union
 
 from src.config.schema import AppConfig
 from src.data.preprocessing import AudioPreprocessor
 from src.features.registry import get_extractor
 from src.models.base_model import BaseAvianModel
-from src.models.trees import RandomForestModel
 from src.models.baselines import LinearRegressionModel
-from src.utils.io import ensure_dir
 from src.utils.logging import setup_logger
 
 logger = setup_logger("ProductionInferenceEngine")
@@ -40,7 +38,9 @@ class AvianInferenceEngine:
 
         # Load Model Checkpoint
         if model_checkpoint_path and Path(model_checkpoint_path).exists():
-            logger.info(f"InferenceEngine: Loading model checkpoint from '{model_checkpoint_path}'...")
+            logger.info(
+                f"InferenceEngine: Loading model checkpoint from '{model_checkpoint_path}'..."
+            )
             self.model = BaseAvianModel.load(Path(model_checkpoint_path))
         else:
             logger.info("InferenceEngine: Initializing default fallback model...")
@@ -97,11 +97,20 @@ class AvianInferenceEngine:
     def predict_batch_dir(self, audio_dir: Union[str, Path]) -> pd.DataFrame:
         """Runs batch predictions across all audio files in a directory."""
         audio_dir = Path(audio_dir)
-        valid_exts = [e.lower() if e.startswith(".") else f".{e.lower()}" for e in self.config.audio.valid_extensions]
-        audio_files = [f for f in audio_dir.rglob("*") if f.is_file() and f.suffix.lower() in valid_exts]
+        valid_exts = [
+            e.lower() if e.startswith(".") else f".{e.lower()}"
+            for e in self.config.audio.valid_extensions
+        ]
+        audio_files = [
+            f
+            for f in audio_dir.rglob("*")
+            if f.is_file() and f.suffix.lower() in valid_exts
+        ]
 
         results = []
-        logger.info(f"Running batch inference on {len(audio_files)} audio files in '{audio_dir}'...")
+        logger.info(
+            f"Running batch inference on {len(audio_files)} audio files in '{audio_dir}'..."
+        )
 
         for file_path in audio_files:
             try:

@@ -1,5 +1,3 @@
-import wave
-import numpy as np
 import pytest
 from fastapi.testclient import TestClient
 from src.inference.api import app

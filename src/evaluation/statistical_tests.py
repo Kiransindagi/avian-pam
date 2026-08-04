@@ -1,8 +1,7 @@
 import numpy as np
-import pandas as pd
 from scipy import stats
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 from src.config.schema import AppConfig
 from src.utils.io import ensure_dir
 from src.utils.logging import setup_logger
@@ -39,7 +38,7 @@ class StatisticalSignificanceTester:
         try:
             wilcoxon_stat, wilcoxon_p = stats.wilcoxon(err_a, err_b)
         except Exception:
-            wilcoxon_stat, wilcoxon_p = 0.0, 1.0
+            _wilcoxon_stat, wilcoxon_p = 0.0, 1.0
 
         # 3. Permutation Test on Mean Absolute Error Difference
         rng = np.random.RandomState(random_state)
@@ -77,7 +76,11 @@ class StatisticalSignificanceTester:
 
         table_rows = ""
         for res in results_list:
-            sig_badge = "✅ **Significant** ($p < 0.05$)" if res["is_significant_at_05"] else "❌ Not Significant"
+            sig_badge = (
+                "✅ **Significant** ($p < 0.05$)"
+                if res["is_significant_at_05"]
+                else "❌ Not Significant"
+            )
             table_rows += (
                 f"| `{res['model_a']}` vs `{res['model_b']}` | {res['mae_a']:.3f} | {res['mae_b']:.3f} | "
                 f"{res['mae_diff']:.3f} | {res['paired_t_pvalue']:.4f} | {res['permutation_pvalue']:.4f} | {sig_badge} |\n"

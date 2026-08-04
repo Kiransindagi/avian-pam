@@ -1,4 +1,3 @@
-import pytest
 import pandas as pd
 from src.config.schema import AppConfig
 from src.features.feature_store import FeatureStore
@@ -19,7 +18,9 @@ def test_feature_store_save_and_load(tmp_path):
         }
     )
 
-    data_file, meta_file = store.save_features(df, version="v1.0.0", dataset_name="test_dataset")
+    data_file, meta_file = store.save_features(
+        df, version="v1.0.0", dataset_name="test_dataset"
+    )
 
     assert data_file.exists()
     assert meta_file.exists()

@@ -1,14 +1,12 @@
-import numpy as np
 import pandas as pd
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any
 
 from src.config.schema import AppConfig
 from src.evaluation.metrics import compute_avian_metrics
 from src.evaluation.statistical_tests import StatisticalSignificanceTester
 from src.evaluation.explainability import ExplainabilityEngine
 from src.evaluation.error_analysis import ErrorAnalyzer
-from src.evaluation.residual_diagnostics import evaluate_residual_diagnostics
 from src.evaluation.ablation import AblationStudyEngine
 from src.evaluation.robustness import RobustnessEvaluator
 from src.visualization.research_plots import ResearchPlotter
@@ -54,21 +52,31 @@ class MasterResearchEvaluator:
         self.generate_evaluation_report(model_top.name, metrics_dict)
 
         # 2. Statistical Significance Testing
-        sig_ab = self.stat_tester.compare_models(y_arr, preds_top, preds_base, model_top.name, model_baseline.name)
-        sig_rf = self.stat_tester.compare_models(y_arr, preds_top, preds_rf, model_top.name, model_rf.name)
+        sig_ab = self.stat_tester.compare_models(
+            y_arr, preds_top, preds_base, model_top.name, model_baseline.name
+        )
+        sig_rf = self.stat_tester.compare_models(
+            y_arr, preds_top, preds_rf, model_top.name, model_rf.name
+        )
         self.stat_tester.generate_pairwise_significance_report([sig_ab, sig_rf])
 
         # 3. Explainability & Feature Importance
-        tree_imp = model_rf.get_feature_importance() or {col: 0.01 for col in X.columns[:10]}
+        tree_imp = model_rf.get_feature_importance() or {
+            col: 0.01 for col in X.columns[:10]
+        }
         perm_imp = self.explainability.compute_permutation_importance(model_top, X, y)
-        self.explainability.generate_feature_importance_report(model_top.name, tree_imp, perm_imp)
+        self.explainability.generate_feature_importance_report(
+            model_top.name, tree_imp, perm_imp
+        )
 
         shap_vals = self.explainability.compute_shap_surrogate_values(model_top, X)
         if shap_vals is not None:
             self.research_plotter.plot_shap_beeswarm(shap_vals, list(X.columns))
 
         # 4. Detailed Error Analysis
-        self.error_analyzer.analyze_errors(X, y_arr, preds_top, model_name=model_top.name)
+        self.error_analyzer.analyze_errors(
+            X, y_arr, preds_top, model_name=model_top.name
+        )
 
         # 5. Residual Diagnostics & Plots
         residuals = y_arr - preds_top
@@ -76,12 +84,16 @@ class MasterResearchEvaluator:
         self.research_plotter.plot_calibration(y_arr, preds_top, model_top.name)
 
         # 6. Feature Category Ablation Study
-        ablation_res = self.ablation_engine.run_ablation_experiments(model_top, X, y, groups=groups)
+        ablation_res = self.ablation_engine.run_ablation_experiments(
+            model_top, X, y, groups=groups
+        )
         df_ablation = pd.DataFrame(ablation_res["ablation_table"])
         self.research_plotter.plot_ablation_comparison(df_ablation)
 
         # 7. Stress-Testing Robustness Evaluation
-        rob_res = self.robustness_evaluator.evaluate_model_robustness(model_top, X, y, groups=groups)
+        rob_res = self.robustness_evaluator.evaluate_model_robustness(
+            model_top, X, y, groups=groups
+        )
         df_robustness = pd.DataFrame(rob_res["robustness_table"])
         self.research_plotter.plot_robustness_degradation(df_robustness)
 
@@ -91,7 +103,9 @@ class MasterResearchEvaluator:
         logger.info("=== SPRINT 4 SCIENTIFIC EVALUATION SUITE COMPLETE ===")
         return True
 
-    def generate_evaluation_report(self, model_name: str, metrics: Dict[str, Any]) -> Path:
+    def generate_evaluation_report(
+        self, model_name: str, metrics: Dict[str, Any]
+    ) -> Path:
         """Generates evaluation_report.md report."""
         out_path = self.reports_dir / "evaluation_report.md"
 
@@ -124,7 +138,9 @@ class MasterResearchEvaluator:
         logger.info(f"Saved master evaluation report to '{out_path}'.")
         return out_path
 
-    def generate_model_comparison_report(self, top_model_name: str, metrics: Dict[str, Any], sig_res: Dict[str, Any]) -> Path:
+    def generate_model_comparison_report(
+        self, top_model_name: str, metrics: Dict[str, Any], sig_res: Dict[str, Any]
+    ) -> Path:
         """Generates model_comparison.md report."""
         out_path = self.reports_dir / "model_comparison.md"
 

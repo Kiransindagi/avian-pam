@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import argparse
@@ -11,9 +12,16 @@ logger = setup_logger("Script_ValidateDataset")
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Standalone dataset integrity and hashing validator script.")
-    parser.add_argument("--config", type=str, default="configs/development.yaml", help="Path to config file.")
-    args = parser.parse_args()
+    parser = argparse.ArgumentParser(
+        description="Standalone dataset integrity and hashing validator script."
+    )
+    parser.add_argument(
+        "--config",
+        type=str,
+        default="configs/development.yaml",
+        help="Path to config file.",
+    )
+    parser.parse_args()
 
     config = AppConfig()
     logger.info("Executing standalone dataset integrity validation...")

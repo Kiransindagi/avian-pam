@@ -24,7 +24,9 @@ class PANNsEmbedder(BaseAudioEmbedder):
         if len(y) == 0:
             return np.zeros(self._dim, dtype=np.float32)
 
-        rng = np.random.RandomState(int(abs(y[-1]) * 1e6) % (2**31 - 1) if len(y) > 0 else 1337)
+        rng = np.random.RandomState(
+            int(abs(y[-1]) * 1e6) % (2**31 - 1) if len(y) > 0 else 1337
+        )
         return rng.randn(self._dim).astype(np.float32) * 0.05
 
 

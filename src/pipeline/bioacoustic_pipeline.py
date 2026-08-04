@@ -1,22 +1,19 @@
 import time
 import librosa
-import numpy as np
 import pandas as pd
 from pathlib import Path
 from typing import List, Optional, Dict, Any, Tuple
 
 from src.config.schema import AppConfig
 from src.config.schemas import (
-    AudioFileContract,
     ValidationContract,
-    PreprocessingContract,
     FeatureRecordContract,
 )
 from src.data.validator import AudioValidator
 from src.data.preprocessing import AudioPreprocessor
 from src.data.versioning import DatasetVersionManager
 from src.visualization.eda_generator import EDAGenerator
-from src.features.registry import get_extractor, list_registered_extractors
+from src.features.registry import get_extractor
 from src.features.feature_store import FeatureStore
 from src.features.quality_analyzer import FeatureQualityAnalyzer
 from src.features.selection import get_feature_selector
@@ -37,8 +34,12 @@ class BioAcousticPipeline:
         self.logs_dir = ensure_dir(config.paths.logs_dir)
 
         # Specialized Loggers for Rich Logging
-        self.logger = setup_logger("BioAcousticPipeline", log_file=self.logs_dir / "pipeline.log")
-        self.feature_logger = setup_logger("FeatureExtraction", log_file=self.logs_dir / "feature.log")
+        self.logger = setup_logger(
+            "BioAcousticPipeline", log_file=self.logs_dir / "pipeline.log"
+        )
+        self.feature_logger = setup_logger(
+            "FeatureExtraction", log_file=self.logs_dir / "feature.log"
+        )
 
         # Enterprise Registries, Telemetry & Feature Store v2
         self.telemetry = PipelineTelemetry(config)
@@ -70,7 +71,9 @@ class BioAcousticPipeline:
                         file_hash=str(row.get("file_hash", "")),
                     )
                 except Exception as e:
-                    self.logger.error(f"Validation Contract Violation on file '{row.get('filename')}': {e}")
+                    self.logger.error(
+                        f"Validation Contract Violation on file '{row.get('filename')}': {e}"
+                    )
                     if self.config.validation.strict_mode:
                         raise ValueError(f"Strict Mode Contract Violation: {e}")
 
@@ -122,13 +125,19 @@ class BioAcousticPipeline:
         processed_dir = Path(self.config.paths.processed_data_dir)
         raw_dir = Path(self.config.paths.raw_data_dir)
 
-        target_dir = processed_dir if processed_dir.exists() and any(processed_dir.iterdir()) else raw_dir
+        target_dir = (
+            processed_dir
+            if processed_dir.exists() and any(processed_dir.iterdir())
+            else raw_dir
+        )
         audio_files = []
         for ext in self.config.audio.valid_extensions:
             audio_files.extend(list(target_dir.rglob(f"*{ext}")))
 
         if not audio_files:
-            self.feature_logger.warning(f"No audio files found in '{target_dir}' for feature extraction.")
+            self.feature_logger.warning(
+                f"No audio files found in '{target_dir}' for feature extraction."
+            )
             return pd.DataFrame(), []
 
         # Instantiate active extractor plugins
@@ -193,7 +202,9 @@ class BioAcousticPipeline:
                     feature_count=len(record) - 4,
                 )
             except Exception as e:
-                self.feature_logger.error(f"Feature Record Contract Error on '{file_path.name}': {e}")
+                self.feature_logger.error(
+                    f"Feature Record Contract Error on '{file_path.name}': {e}"
+                )
 
             records.append(record)
 
@@ -204,7 +215,9 @@ class BioAcousticPipeline:
         self.telemetry.record_stage_runtime("feature_extraction", time.time() - t0)
         return feature_df, extractors
 
-    def run_feature_quality_and_selection(self, feature_df: pd.DataFrame) -> pd.DataFrame:
+    def run_feature_quality_and_selection(
+        self, feature_df: pd.DataFrame
+    ) -> pd.DataFrame:
         """Stage 5: Quality Analysis & Configurable Feature Selection."""
         t0 = time.time()
         self.logger.info("=== STAGE 5: FEATURE QUALITY ANALYSIS & SELECTION ===")
@@ -232,7 +245,9 @@ class BioAcousticPipeline:
         self.telemetry.record_stage_runtime("quality_and_selection", time.time() - t0)
         return filtered_df
 
-    def run_feature_store_v2(self, feature_df: pd.DataFrame, extractors: List[Any]) -> Optional[Dict[str, Path]]:
+    def run_feature_store_v2(
+        self, feature_df: pd.DataFrame, extractors: List[Any]
+    ) -> Optional[Dict[str, Path]]:
         """Stage 6: Feature Store v2 Bundle Export."""
         t0 = time.time()
         self.logger.info("=== STAGE 6: FEATURE STORE V2 EXPORT ===")
@@ -261,10 +276,14 @@ class BioAcousticPipeline:
 
     def run_full_pipeline(self) -> bool:
         """Executes complete Sprint 2 feature engineering platform pipeline."""
-        self.logger.info(f"Starting Sprint 2 Enterprise Pipeline Execution [{self.config.project.environment.upper()}]...")
+        self.logger.info(
+            f"Starting Sprint 2 Enterprise Pipeline Execution [{self.config.project.environment.upper()}]..."
+        )
 
         # 0. Generate Architecture SVG
-        generate_architecture_svg(Path(self.config.paths.reports_dir) / "architecture.svg")
+        generate_architecture_svg(
+            Path(self.config.paths.reports_dir) / "architecture.svg"
+        )
 
         # Stage 1: Validation
         val_df = self.run_validation()
@@ -296,12 +315,16 @@ class BioAcousticPipeline:
         )
 
         # Stage 9: Telemetry & Pipeline Metadata
-        self.telemetry.generate_benchmark_report(num_files_processed=len(selected_feats_df))
+        self.telemetry.generate_benchmark_report(
+            num_files_processed=len(selected_feats_df)
+        )
         self.telemetry.generate_pipeline_metadata(
             dataset_version=self.config.project.version,
             num_files=len(selected_feats_df),
             status="SUCCESS",
         )
 
-        self.logger.info("=== SPRINT 2 ENTERPRISE FEATURE PLATFORM EXECUTION COMPLETE ===")
+        self.logger.info(
+            "=== SPRINT 2 ENTERPRISE FEATURE PLATFORM EXECUTION COMPLETE ==="
+        )
         return True

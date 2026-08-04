@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 from pydantic import BaseModel, Field, field_validator
 
 
@@ -7,14 +7,18 @@ class AudioFileContract(BaseModel):
     """Contract enforcing incoming raw audio file specifications."""
 
     file_path: Path
-    file_size_bytes: int = Field(gt=0, description="File size must be greater than zero bytes")
+    file_size_bytes: int = Field(
+        gt=0, description="File size must be greater than zero bytes"
+    )
     extension: str
 
     @field_validator("extension")
     def validate_ext(cls, v):
         allowed = [".wav", ".flac", ".ogg", ".mp3"]
         if v.lower() not in allowed:
-            raise ValueError(f"Extension '{v}' violates AudioFileContract. Allowed: {allowed}")
+            raise ValueError(
+                f"Extension '{v}' violates AudioFileContract. Allowed: {allowed}"
+            )
         return v.lower()
 
 
@@ -57,5 +61,7 @@ class FeatureRecordContract(BaseModel):
     @field_validator("feature_count")
     def validate_feature_count(cls, v):
         if v < 5:
-            raise ValueError(f"Feature vector count ({v}) below minimum production contract threshold (5)")
+            raise ValueError(
+                f"Feature vector count ({v}) below minimum production contract threshold (5)"
+            )
         return v

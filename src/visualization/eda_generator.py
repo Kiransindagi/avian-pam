@@ -1,4 +1,5 @@
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -7,7 +8,6 @@ import librosa.display
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from typing import Optional
 from src.config.schema import AppConfig
 from src.utils.io import ensure_dir
 from src.utils.logging import setup_logger
@@ -39,7 +39,9 @@ class EDAGenerator:
 
         # 1. Waveform
         librosa.display.waveshow(y, sr=sr, ax=axes[0], color="#00adb5")
-        axes[0].set_title(f"Waveform: {audio_file.name}", fontsize=12, fontweight="bold")
+        axes[0].set_title(
+            f"Waveform: {audio_file.name}", fontsize=12, fontweight="bold"
+        )
         axes[0].set_ylabel("Amplitude")
 
         # 2. Spectrogram (STFT)
@@ -52,7 +54,9 @@ class EDAGenerator:
         fig.colorbar(img1, ax=axes[1], format="%+2.0f dB")
 
         # 3. Mel-Spectrogram
-        S = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=self.config.features.n_mels)
+        S = librosa.feature.melspectrogram(
+            y=y, sr=sr, n_mels=self.config.features.n_mels
+        )
         S_dB = librosa.power_to_db(S, ref=np.max)
         img2 = librosa.display.specshow(
             S_dB, sr=sr, x_axis="time", y_axis="mel", ax=axes[2], cmap="viridis"
@@ -72,7 +76,9 @@ class EDAGenerator:
     def plot_metadata_distributions(self, meta_path: Path) -> dict:
         """Plots species distribution, bird population density, and duration histogram."""
         if not meta_path.exists():
-            logger.warning(f"Metadata file '{meta_path}' not found. Skipping metadata distributions.")
+            logger.warning(
+                f"Metadata file '{meta_path}' not found. Skipping metadata distributions."
+            )
             return {}
 
         df = pd.read_csv(meta_path)
@@ -83,7 +89,9 @@ class EDAGenerator:
             sns.countplot(
                 data=df,
                 y="species",
-                order=df["species"].value_counts().index[: self.config.eda.top_n_species],
+                order=df["species"]
+                .value_counts()
+                .index[: self.config.eda.top_n_species],
                 ax=axes[0],
                 palette="crest",
             )
@@ -102,7 +110,11 @@ class EDAGenerator:
                 ax=axes[1],
                 color="#e4572e",
             )
-            axes[1].set_title("Bird Population Distribution (Ground Truth)", fontsize=11, fontweight="bold")
+            axes[1].set_title(
+                "Bird Population Distribution (Ground Truth)",
+                fontsize=11,
+                fontweight="bold",
+            )
             axes[1].set_xlabel("Bird Count per Recording")
         else:
             axes[1].text(0.5, 0.5, "No bird_count column", ha="center")
@@ -117,7 +129,9 @@ class EDAGenerator:
                 color="#17b978",
                 kde=True,
             )
-            axes[2].set_title("Recording Duration (seconds)", fontsize=11, fontweight="bold")
+            axes[2].set_title(
+                "Recording Duration (seconds)", fontsize=11, fontweight="bold"
+            )
             axes[2].set_xlabel("Duration (s)")
         else:
             axes[2].text(0.5, 0.5, "No duration column", ha="center")
@@ -200,11 +214,31 @@ Below is the acoustic analysis (Waveform, STFT Spectrogram, and 128-band Mel-Spe
         meta_path = raw_dir / self.config.paths.metadata_filename
 
         total_scanned = len(validation_df) if not validation_df.empty else 0
-        valid_count = int((validation_df["status"] == "VALID").sum()) if not validation_df.empty else 0
-        corrupt_count = int((validation_df["status"] == "CORRUPT").sum()) if not validation_df.empty else 0
-        duplicate_count = int((validation_df["status"] == "DUPLICATE").sum()) if not validation_df.empty else 0
-        missing_count = int((validation_df["status"] == "MISSING").sum()) if not validation_df.empty else 0
-        warning_count = int((validation_df["status"] == "WARNING").sum()) if not validation_df.empty else 0
+        valid_count = (
+            int((validation_df["status"] == "VALID").sum())
+            if not validation_df.empty
+            else 0
+        )
+        corrupt_count = (
+            int((validation_df["status"] == "CORRUPT").sum())
+            if not validation_df.empty
+            else 0
+        )
+        duplicate_count = (
+            int((validation_df["status"] == "DUPLICATE").sum())
+            if not validation_df.empty
+            else 0
+        )
+        missing_count = (
+            int((validation_df["status"] == "MISSING").sum())
+            if not validation_df.empty
+            else 0
+        )
+        warning_count = (
+            int((validation_df["status"] == "WARNING").sum())
+            if not validation_df.empty
+            else 0
+        )
 
         health_pct = round((valid_count / max(1, total_scanned)) * 100, 1)
 
@@ -212,8 +246,16 @@ Below is the acoustic analysis (Waveform, STFT Spectrogram, and 128-band Mel-Spe
         if meta_path.exists():
             try:
                 df_meta = pd.read_csv(meta_path)
-                species_counts = df_meta["species"].value_counts().to_dict() if "species" in df_meta.columns else {}
-                count_dist = df_meta["bird_count"].describe().to_dict() if "bird_count" in df_meta.columns else {}
+                species_counts = (
+                    df_meta["species"].value_counts().to_dict()
+                    if "species" in df_meta.columns
+                    else {}
+                )
+                count_dist = (
+                    df_meta["bird_count"].describe().to_dict()
+                    if "bird_count" in df_meta.columns
+                    else {}
+                )
 
                 meta_stats = f"""
 ### Metadata Integrity & Population Stats

@@ -1,10 +1,10 @@
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import pandas as pd
-from pathlib import Path
 from typing import Optional, List
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
@@ -23,10 +23,16 @@ class FeaturePlotter:
         self.figures_dir = ensure_dir(config.paths.figures_dir)
         self.dpi = getattr(config.eda, "dpi", 200)
 
-    def generate_all_plots(self, df: pd.DataFrame, target_col: Optional[str] = "bird_count"):
+    def generate_all_plots(
+        self, df: pd.DataFrame, target_col: Optional[str] = "bird_count"
+    ):
         """Generates all automated visualization figures."""
         non_feat_cols = ["file_path", "filename", "species", target_col]
-        feature_cols = [c for c in df.columns if c not in non_feat_cols and np.issubdtype(df[c].dtype, np.number)]
+        feature_cols = [
+            c
+            for c in df.columns
+            if c not in non_feat_cols and np.issubdtype(df[c].dtype, np.number)
+        ]
 
         if not feature_cols or len(df) == 0:
             logger.warning("DataFrame empty or no numeric feature columns to plot.")
@@ -43,8 +49,12 @@ class FeaturePlotter:
         out_path = self.figures_dir / "correlation_heatmap.png"
         fig, ax = plt.subplots(figsize=(10, 8))
         corr = df[feature_cols].corr()
-        sns.heatmap(corr, annot=True, fmt=".2f", cmap="coolwarm", vmin=-1, vmax=1, ax=ax)
-        ax.set_title("Acoustic Feature Correlation Matrix", fontsize=14, fontweight="bold")
+        sns.heatmap(
+            corr, annot=True, fmt=".2f", cmap="coolwarm", vmin=-1, vmax=1, ax=ax
+        )
+        ax.set_title(
+            "Acoustic Feature Correlation Matrix", fontsize=14, fontweight="bold"
+        )
         plt.tight_layout()
         fig.savefig(out_path, dpi=self.dpi)
         plt.close(fig)
@@ -71,7 +81,9 @@ class FeaturePlotter:
         plt.close(fig)
         logger.info(f"Saved feature distributions plot to '{out_path}'.")
 
-    def plot_pca_projection(self, df: pd.DataFrame, feature_cols: List[str], target_col: Optional[str]):
+    def plot_pca_projection(
+        self, df: pd.DataFrame, feature_cols: List[str], target_col: Optional[str]
+    ):
         """Generates 2D PCA projection scatter plot."""
         out_path = self.figures_dir / "pca_projection.png"
         X = df[feature_cols].fillna(0)
@@ -80,11 +92,22 @@ class FeaturePlotter:
 
         fig, ax = plt.subplots(figsize=(8, 6))
         color_data = df[target_col] if target_col and target_col in df.columns else None
-        scatter = ax.scatter(X_pca[:, 0], X_pca[:, 1], c=color_data, cmap="viridis", alpha=0.8, edgecolors="k")
+        scatter = ax.scatter(
+            X_pca[:, 0],
+            X_pca[:, 1],
+            c=color_data,
+            cmap="viridis",
+            alpha=0.8,
+            edgecolors="k",
+        )
         if color_data is not None:
             plt.colorbar(scatter, label="Bird Population Count")
 
-        ax.set_title(f"2D PCA Projection (Exp Var: {np.sum(pca.explained_variance_ratio_):.2f})", fontsize=12, fontweight="bold")
+        ax.set_title(
+            f"2D PCA Projection (Exp Var: {np.sum(pca.explained_variance_ratio_):.2f})",
+            fontsize=12,
+            fontweight="bold",
+        )
         ax.set_xlabel("PC 1")
         ax.set_ylabel("PC 2")
         plt.tight_layout()
@@ -92,7 +115,9 @@ class FeaturePlotter:
         plt.close(fig)
         logger.info(f"Saved PCA projection to '{out_path}'.")
 
-    def plot_tsne_projection(self, df: pd.DataFrame, feature_cols: List[str], target_col: Optional[str]):
+    def plot_tsne_projection(
+        self, df: pd.DataFrame, feature_cols: List[str], target_col: Optional[str]
+    ):
         """Generates 2D t-SNE embedding projection scatter plot."""
         out_path = self.figures_dir / "umap_projection.png"
         X = df[feature_cols].fillna(0)
@@ -105,7 +130,14 @@ class FeaturePlotter:
 
         fig, ax = plt.subplots(figsize=(8, 6))
         color_data = df[target_col] if target_col and target_col in df.columns else None
-        scatter = ax.scatter(X_tsne[:, 0], X_tsne[:, 1], c=color_data, cmap="magma", alpha=0.8, edgecolors="k")
+        scatter = ax.scatter(
+            X_tsne[:, 0],
+            X_tsne[:, 1],
+            c=color_data,
+            cmap="magma",
+            alpha=0.8,
+            edgecolors="k",
+        )
         if color_data is not None:
             plt.colorbar(scatter, label="Bird Population Count")
 
@@ -117,7 +149,9 @@ class FeaturePlotter:
         plt.close(fig)
         logger.info(f"Saved t-SNE projection to '{out_path}'.")
 
-    def plot_species_breakdown(self, df: pd.DataFrame, feature_cols: List[str], target_col: Optional[str]):
+    def plot_species_breakdown(
+        self, df: pd.DataFrame, feature_cols: List[str], target_col: Optional[str]
+    ):
         """Generates species / target breakdown boxplots."""
         out_path = self.figures_dir / "species_feature_breakdown.png"
         group_col = "species" if "species" in df.columns else target_col

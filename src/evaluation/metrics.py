@@ -1,7 +1,6 @@
 import numpy as np
-import pandas as pd
 from scipy import stats
-from typing import Dict, Any, Tuple, Optional
+from typing import Dict, Any
 
 
 def compute_avian_metrics(
@@ -16,18 +15,20 @@ def compute_avian_metrics(
 
     residuals = y_true - y_pred
     mae = float(np.mean(np.abs(residuals)))
-    rmse = float(np.sqrt(np.mean(residuals ** 2)))
+    rmse = float(np.sqrt(np.mean(residuals**2)))
     medae = float(np.median(np.abs(residuals)))
 
     # MAPE (safely handling zero targets)
     non_zero_mask = y_true != 0
     if np.any(non_zero_mask):
-        mape = float(np.mean(np.abs(residuals[non_zero_mask] / y_true[non_zero_mask])) * 100.0)
+        mape = float(
+            np.mean(np.abs(residuals[non_zero_mask] / y_true[non_zero_mask])) * 100.0
+        )
     else:
         mape = 0.0
 
     # R^2 Score
-    ss_res = np.sum(residuals ** 2)
+    ss_res = np.sum(residuals**2)
     ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)
     r2 = float(1.0 - (ss_res / max(1e-7, ss_tot)))
 

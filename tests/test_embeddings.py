@@ -1,6 +1,9 @@
 import numpy as np
-import pytest
-from src.features.embeddings import BirdNETEmbedder, PANNsEmbedder, EmbeddingCacheManager
+from src.features.embeddings import (
+    BirdNETEmbedder,
+    PANNsEmbedder,
+    EmbeddingCacheManager,
+)
 
 
 def test_pretrained_embeddings(tmp_path):

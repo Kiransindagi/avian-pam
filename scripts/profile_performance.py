@@ -3,6 +3,7 @@ import cProfile
 import pstats
 import io
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src.config.schema import AppConfig

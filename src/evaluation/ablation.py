@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, Optional
 from src.config.schema import AppConfig
 from src.models.base_model import BaseAvianModel
 from src.training.cross_validation import CrossValidationEngine
@@ -28,22 +28,58 @@ class AblationStudyEngine:
     ) -> Dict[str, Any]:
         """Runs ablation evaluation across feature subset categories."""
         meta_cols = ["file_path", "filename", "species", "bird_count"]
-        all_cols = [c for c in df_features.columns if c not in meta_cols and np.issubdtype(df_features[c].dtype, np.number)]
+        all_cols = [
+            c
+            for c in df_features.columns
+            if c not in meta_cols and np.issubdtype(df_features[c].dtype, np.number)
+        ]
 
         # Categorize features by prefix
-        dsp_cols = [c for c in all_cols if not c.startswith(("aci", "bioacoustic", "acoustic", "ndsi", "birdnet", "panns"))]
-        eco_cols = [c for c in all_cols if c.startswith(("aci", "bioacoustic", "acoustic", "ndsi", "call_", "inter_call", "chorus"))]
+        dsp_cols = [
+            c
+            for c in all_cols
+            if not c.startswith(
+                ("aci", "bioacoustic", "acoustic", "ndsi", "birdnet", "panns")
+            )
+        ]
+        eco_cols = [
+            c
+            for c in all_cols
+            if c.startswith(
+                (
+                    "aci",
+                    "bioacoustic",
+                    "acoustic",
+                    "ndsi",
+                    "call_",
+                    "inter_call",
+                    "chorus",
+                )
+            )
+        ]
         emb_cols = [c for c in all_cols if c.startswith(("birdnet", "panns"))]
 
         # Define ablation subset groups
         subsets = {
             "All Features": all_cols,
-            "DSP Only": dsp_cols if dsp_cols else all_cols[:max(1, len(all_cols)//2)],
-            "Ecoacoustic Only": eco_cols if eco_cols else all_cols[:max(1, len(all_cols)//3)],
-            "Embeddings Only": emb_cols if emb_cols else all_cols[max(1, len(all_cols)//2):],
-            "DSP + Ecoacoustic": list(set(dsp_cols + eco_cols)) if (dsp_cols or eco_cols) else all_cols,
-            "DSP + Embeddings": list(set(dsp_cols + emb_cols)) if (dsp_cols or emb_cols) else all_cols,
-            "Ecoacoustic + Embeddings": list(set(eco_cols + emb_cols)) if (eco_cols or emb_cols) else all_cols,
+            "DSP Only": dsp_cols
+            if dsp_cols
+            else all_cols[: max(1, len(all_cols) // 2)],
+            "Ecoacoustic Only": eco_cols
+            if eco_cols
+            else all_cols[: max(1, len(all_cols) // 3)],
+            "Embeddings Only": emb_cols
+            if emb_cols
+            else all_cols[max(1, len(all_cols) // 2) :],
+            "DSP + Ecoacoustic": list(set(dsp_cols + eco_cols))
+            if (dsp_cols or eco_cols)
+            else all_cols,
+            "DSP + Embeddings": list(set(dsp_cols + emb_cols))
+            if (dsp_cols or emb_cols)
+            else all_cols,
+            "Ecoacoustic + Embeddings": list(set(eco_cols + emb_cols))
+            if (eco_cols or emb_cols)
+            else all_cols,
         }
 
         ablation_results = []
@@ -61,16 +97,20 @@ class AblationStudyEngine:
             if name == "All Features":
                 baseline_mae = mae
 
-            perf_drop = round(mae - baseline_mae, 4) if baseline_mae is not None else 0.0
+            perf_drop = (
+                round(mae - baseline_mae, 4) if baseline_mae is not None else 0.0
+            )
 
-            ablation_results.append({
-                "feature_subset": name,
-                "num_features": len(cols),
-                "cv_mae": mae,
-                "cv_rmse": cv_res["mean_rmse"],
-                "r2_score": cv_res["overall_r2"],
-                "performance_degradation_mae": perf_drop,
-            })
+            ablation_results.append(
+                {
+                    "feature_subset": name,
+                    "num_features": len(cols),
+                    "cv_mae": mae,
+                    "cv_rmse": cv_res["mean_rmse"],
+                    "r2_score": cv_res["overall_r2"],
+                    "performance_degradation_mae": perf_drop,
+                }
+            )
 
         df_ablation = pd.DataFrame(ablation_results)
         self.generate_markdown_report(model.name, df_ablation)
@@ -80,13 +120,19 @@ class AblationStudyEngine:
             "ablation_table": df_ablation.to_dict("records"),
         }
 
-    def generate_markdown_report(self, model_name: str, df_ablation: pd.DataFrame) -> Path:
+    def generate_markdown_report(
+        self, model_name: str, df_ablation: pd.DataFrame
+    ) -> Path:
         """Generates ablation_study.md report."""
         out_path = self.reports_dir / "ablation_study.md"
 
         table_rows = ""
         for _, row in df_ablation.iterrows():
-            drop_str = f"+{row['performance_degradation_mae']:.3f}" if row['performance_degradation_mae'] > 0 else f"{row['performance_degradation_mae']:.3f}"
+            drop_str = (
+                f"+{row['performance_degradation_mae']:.3f}"
+                if row["performance_degradation_mae"] > 0
+                else f"{row['performance_degradation_mae']:.3f}"
+            )
             table_rows += (
                 f"| **{row['feature_subset']}** | {row['num_features']} | **{row['cv_mae']:.3f}** | "
                 f"{row['cv_rmse']:.3f} | {row['r2_score']:.3f} | `{drop_str}` |\n"

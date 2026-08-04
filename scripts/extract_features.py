@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import argparse
@@ -11,9 +12,16 @@ logger = setup_logger("Script_GenerateFeatures")
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Standalone feature extraction and feature store exporter.")
-    parser.add_argument("--config", type=str, default="configs/development.yaml", help="Path to config file.")
-    args = parser.parse_args()
+    parser = argparse.ArgumentParser(
+        description="Standalone feature extraction and feature store exporter."
+    )
+    parser.add_argument(
+        "--config",
+        type=str,
+        default="configs/development.yaml",
+        help="Path to config file.",
+    )
+    parser.parse_args()
 
     config = AppConfig()
     pipeline = BioAcousticPipeline(config)

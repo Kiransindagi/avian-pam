@@ -4,7 +4,7 @@ import psutil
 import subprocess
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any
 from src.config.schema import AppConfig
 from src.utils.io import ensure_dir
 from src.utils.logging import setup_logger
@@ -27,7 +27,11 @@ class ExperimentTracker:
     def _get_git_commit(self) -> str:
         try:
             cmd = ["git", "rev-parse", "--short", "HEAD"]
-            out = subprocess.check_output(cmd, stderr=subprocess.DEVNULL).decode("utf-8").strip()
+            out = (
+                subprocess.check_output(cmd, stderr=subprocess.DEVNULL)
+                .decode("utf-8")
+                .strip()
+            )
             return out
         except Exception:
             return "git-unavailable"
@@ -75,11 +79,16 @@ class ExperimentTracker:
             json.dump(registry_data, f, indent=2)
 
         # Log MLruns sidecar JSON
-        run_file = self.mlruns_dir / f"{experiment_id}_{model_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        run_file = (
+            self.mlruns_dir
+            / f"{experiment_id}_{model_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        )
         with open(run_file, "w", encoding="utf-8") as f:
             json.dump(experiment_entry, f, indent=2)
 
-        logger.info(f"ExperimentTracker: Logged experiment run '{experiment_id}' for model '{model_name}'.")
+        logger.info(
+            f"ExperimentTracker: Logged experiment run '{experiment_id}' for model '{model_name}'."
+        )
         return run_file
 
     def _load_registry(self) -> Dict[str, Any]:
@@ -89,4 +98,8 @@ class ExperimentTracker:
                     return json.load(f)
             except Exception:
                 pass
-        return {"project": self.config.project.name, "total_experiments": 0, "registry": []}
+        return {
+            "project": self.config.project.name,
+            "total_experiments": 0,
+            "registry": [],
+        }

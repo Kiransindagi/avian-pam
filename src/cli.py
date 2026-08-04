@@ -39,7 +39,9 @@ def main():
 
     config_path = Path(args.config)
     if not config_path.exists():
-        logger.error(f"Config file not found at '{config_path}'. Please specify a valid YAML file.")
+        logger.error(
+            f"Config file not found at '{config_path}'. Please specify a valid YAML file."
+        )
         sys.exit(1)
 
     config = AppConfig.load_from_yaml(config_path)

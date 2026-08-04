@@ -40,8 +40,9 @@ The project includes a complete production deployment demonstration showing:
 - JSON prediction response
 
 <p align="center">
-  <video src="docs/demo.mp4" controls width="100%"></video>
+  <img src="docs/demo.gif" width="100%" alt="Live Platform Demonstration" />
 </p>
+
 
 
 ---

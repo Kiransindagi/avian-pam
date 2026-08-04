@@ -1,10 +1,11 @@
 import numpy as np
-import pandas as pd
 from scipy import stats
 from typing import Dict, Any
 
 
-def evaluate_residual_diagnostics(y_true: np.ndarray, y_pred: np.ndarray) -> Dict[str, Any]:
+def evaluate_residual_diagnostics(
+    y_true: np.ndarray, y_pred: np.ndarray
+) -> Dict[str, Any]:
     """Computes statistical diagnostics on model error residuals."""
     residuals = y_true - y_pred
 
@@ -13,12 +14,14 @@ def evaluate_residual_diagnostics(y_true: np.ndarray, y_pred: np.ndarray) -> Dic
         if len(residuals) < 5000:
             shapiro_stat, shapiro_p = stats.shapiro(residuals)
         else:
-            shapiro_stat, shapiro_p = stats.kstest(residuals, 'norm')
+            shapiro_stat, shapiro_p = stats.kstest(residuals, "norm")
     else:
-        shapiro_stat, shapiro_p = 0.0, 1.0
+        _shapiro_stat, shapiro_p = 0.0, 1.0
 
     # Heteroscedasticity Correlation Test (Spearman correlation between |residuals| and predicted)
-    hetero_r, hetero_p = stats.spearmanr(y_pred, np.abs(residuals)) if len(y_pred) > 2 else (0.0, 1.0)
+    hetero_r, hetero_p = (
+        stats.spearmanr(y_pred, np.abs(residuals)) if len(y_pred) > 2 else (0.0, 1.0)
+    )
 
     skewness = float(stats.skew(residuals)) if len(residuals) > 2 else 0.0
     kurtosis = float(stats.kurtosis(residuals)) if len(residuals) > 2 else 0.0

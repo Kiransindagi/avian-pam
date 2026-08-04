@@ -9,17 +9,19 @@ _EXTRACTOR_REGISTRY: Dict[str, Type[BaseFeatureExtractor]] = {}
 
 def register_extractor(name: str):
     """Decorator to register a new feature extractor plugin.
-    
+
     Example:
         @register_extractor("bioacoustics")
         class BioacousticExtractor(BaseFeatureExtractor):
             ...
     """
+
     def decorator(cls: Type[BaseFeatureExtractor]):
         if name in _EXTRACTOR_REGISTRY:
             logger.warning(f"Overwriting registered feature extractor plugin '{name}'")
         _EXTRACTOR_REGISTRY[name] = cls
         return cls
+
     return decorator
 
 

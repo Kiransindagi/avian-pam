@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 import numpy as np
 
 
 class BaseFeatureExtractor(ABC):
     """Abstract Base Class for all Acoustic Feature Extractors in Avian PAM Platform.
-    
+
     All extractors must implement this interface to support automatic registration,
     metadata introspection, and config-driven pipeline execution.
     """
@@ -57,11 +57,11 @@ class BaseFeatureExtractor(ABC):
     @abstractmethod
     def extract(self, y: np.ndarray, sr: int) -> Dict[str, float]:
         """Extracts acoustic features from an audio time-series array.
-        
+
         Args:
             y: Audio time-series numpy array (1D float32)
             sr: Sampling rate in Hz
-            
+
         Returns:
             Dictionary mapping feature names to scalar numerical values.
         """

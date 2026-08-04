@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Any, List
 import numpy as np
 
 
@@ -24,11 +23,11 @@ class BaseAudioEmbedder(ABC):
     @abstractmethod
     def embed(self, y: np.ndarray, sr: int) -> np.ndarray:
         """Computes dense feature embedding array for input audio signal.
-        
+
         Args:
             y: Audio waveform numpy array (1D float32)
             sr: Sample rate in Hz
-            
+
         Returns:
             1D numpy array of shape (embedding_dimension,)
         """

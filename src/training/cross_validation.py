@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
-from typing import Dict, Any, List, Optional, Tuple, Type
-from sklearn.model_selection import KFold, GroupKFold, LeaveOneGroupOut, RepeatedKFold
+from typing import Dict, Any, List, Optional
+from sklearn.model_selection import KFold, GroupKFold, LeaveOneGroupOut
 from src.models.base_model import BaseAvianModel
 from src.evaluation.metrics import compute_avian_metrics
 from src.utils.logging import setup_logger
@@ -39,7 +39,11 @@ class CrossValidationEngine:
         if groups is None or len(groups) != len(y_arr):
             groups_arr = np.arange(len(y_arr)) % max(2, self.n_splits)
         else:
-            groups_arr = groups.to_numpy() if isinstance(groups, pd.Series) else np.asarray(groups)
+            groups_arr = (
+                groups.to_numpy()
+                if isinstance(groups, pd.Series)
+                else np.asarray(groups)
+            )
 
         num_unique_groups = len(np.unique(groups_arr))
         n_splits = min(self.n_splits, num_unique_groups) if num_unique_groups > 1 else 2
@@ -72,7 +76,13 @@ class CrossValidationEngine:
 
         # Overall Out-of-Fold Evaluation Metrics
         overall_metrics = compute_avian_metrics(y_arr, oof_preds)
-        r2 = float(1.0 - (np.sum((y_arr - oof_preds)**2) / max(1e-7, np.sum((y_arr - np.mean(y_arr))**2))))
+        r2 = float(
+            1.0
+            - (
+                np.sum((y_arr - oof_preds) ** 2)
+                / max(1e-7, np.sum((y_arr - np.mean(y_arr)) ** 2))
+            )
+        )
         overall_metrics["r2"] = round(r2, 4)
 
         mean_mae = float(np.mean([m["mae"] for m in fold_metrics]))

@@ -2,7 +2,7 @@ import librosa
 import numpy as np
 import soundfile as sf
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Tuple
 from src.config.schema import AppConfig
 from src.utils.io import ensure_dir
 from src.utils.logging import setup_logger

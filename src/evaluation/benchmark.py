@@ -6,7 +6,7 @@ import time
 import psutil
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 from src.config.schema import AppConfig
 from src.utils.io import ensure_dir
 from src.utils.logging import setup_logger
@@ -48,7 +48,9 @@ class PipelineTelemetry:
         benchmark_data = {
             "total_pipeline_runtime_sec": round(total_runtime, 3),
             "stage_runtimes_sec": self.stage_runtimes,
-            "throughput_files_per_sec": round(num_files_processed / max(0.001, total_runtime), 2),
+            "throughput_files_per_sec": round(
+                num_files_processed / max(0.001, total_runtime), 2
+            ),
             "system_resources": metrics,
             "timestamp": datetime.now().isoformat(),
         }
@@ -70,9 +72,14 @@ class PipelineTelemetry:
         git_commit = "uncommitted_local"
         try:
             import subprocess
-            git_commit = subprocess.check_output(
-                ["git", "rev-parse", "HEAD"], stderr=subprocess.DEVNULL
-            ).decode("utf-8").strip()
+
+            git_commit = (
+                subprocess.check_output(
+                    ["git", "rev-parse", "HEAD"], stderr=subprocess.DEVNULL
+                )
+                .decode("utf-8")
+                .strip()
+            )
         except Exception:
             pass
 

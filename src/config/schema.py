@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 from pathlib import Path
 import yaml
 from pydantic import BaseModel, Field
@@ -58,7 +58,12 @@ class EDAConfig(BaseModel):
 
 
 class FeaturesConfig(BaseModel):
-    active_extractors: List[str] = ["dsp", "bioacoustics", "birdnet_embeddings", "panns_embeddings"]
+    active_extractors: List[str] = [
+        "dsp",
+        "bioacoustics",
+        "birdnet_embeddings",
+        "panns_embeddings",
+    ]
     n_mfcc: int = 13
     n_fft: int = 2048
     hop_length: int = 512

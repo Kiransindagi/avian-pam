@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any
 from src.config.schema import AppConfig
 from src.utils.io import ensure_dir
 from src.utils.logging import setup_logger
@@ -32,29 +32,41 @@ class ErrorAnalyzer:
 
         # 1. Best & Worst Predictions
         df_sorted = df_eval.sort_values(by="absolute_error", ascending=False)
-        cols_to_keep = [c for c in ["filename", "species", "actual", "predicted", "absolute_error"] if c in df_eval.columns]
+        cols_to_keep = [
+            c
+            for c in ["filename", "species", "actual", "predicted", "absolute_error"]
+            if c in df_eval.columns
+        ]
         worst_predictions = df_sorted.head(5)[cols_to_keep].to_dict("records")
         best_predictions = df_sorted.tail(5)[cols_to_keep].to_dict("records")
 
         # 2. Difficulty Breakdown by Species Group
         species_diff = {}
         if "species" in df_eval.columns:
-            grp = df_eval.groupby("species")["absolute_error"].agg(["mean", "std", "count"]).reset_index()
+            grp = (
+                df_eval.groupby("species")["absolute_error"]
+                .agg(["mean", "std", "count"])
+                .reset_index()
+            )
             species_diff = grp.to_dict("records")
 
         # 3. Target Magnitude Error Breakdown
-        count_bins = pd.cut(df_eval["actual"], bins=3, labels=["Low (1-3)", "Medium (4-7)", "High (8+)"])
+        count_bins = pd.cut(
+            df_eval["actual"], bins=3, labels=["Low (1-3)", "Medium (4-7)", "High (8+)"]
+        )
         df_eval["count_bin"] = count_bins
         bin_err = df_eval.groupby("count_bin")["absolute_error"].mean().to_dict()
 
         analysis_summary = {
             "model_name": model_name,
             "overall_mae": round(float(np.mean(df_eval["absolute_error"])), 4),
-            "overall_rmse": round(float(np.sqrt(np.mean(df_eval["residual"]**2))), 4),
+            "overall_rmse": round(float(np.sqrt(np.mean(df_eval["residual"] ** 2))), 4),
             "worst_predictions": worst_predictions,
             "best_predictions": best_predictions,
             "species_difficulty": species_diff,
-            "count_bin_mae": {str(k): round(float(v), 4) for k, v in bin_err.items() if not pd.isna(v)},
+            "count_bin_mae": {
+                str(k): round(float(v), 4) for k, v in bin_err.items() if not pd.isna(v)
+            },
         }
 
         self.generate_markdown_report(analysis_summary)

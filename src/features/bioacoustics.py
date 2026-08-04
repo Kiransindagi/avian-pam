@@ -1,6 +1,5 @@
 import librosa
 import numpy as np
-import scipy.stats as stats
 from typing import Dict, Any, List
 from src.features.base import BaseFeatureExtractor
 from src.features.registry import register_extractor
@@ -9,7 +8,7 @@ from src.features.registry import register_extractor
 @register_extractor("bioacoustics")
 class BioacousticFeatureExtractor(BaseFeatureExtractor):
     """Production Bioacoustic & Ecoacoustic Feature Extractor.
-    
+
     Extracts biologically meaningful ecoacoustic indices (ACI, BI, Entropy, NDSI)
     and call density statistics derived from bioacoustics literature for bird abundance estimation.
     """
@@ -34,11 +33,19 @@ class BioacousticFeatureExtractor(BaseFeatureExtractor):
     @property
     def output_schema(self) -> Dict[str, Any]:
         return {
-            "aci": float, "bioacoustic_index": float, "acoustic_entropy_h": float,
-            "temporal_entropy_ht": float, "spectral_entropy_hf": float, "ndsi": float,
-            "acoustic_occupancy": float, "call_density": float, "chorus_intensity": float,
-            "inter_call_interval_mean": float, "inter_call_interval_std": float,
-            "call_burstiness": float, "soundscape_diversity": float,
+            "aci": float,
+            "bioacoustic_index": float,
+            "acoustic_entropy_h": float,
+            "temporal_entropy_ht": float,
+            "spectral_entropy_hf": float,
+            "ndsi": float,
+            "acoustic_occupancy": float,
+            "call_density": float,
+            "chorus_intensity": float,
+            "inter_call_interval_mean": float,
+            "inter_call_interval_std": float,
+            "call_burstiness": float,
+            "soundscape_diversity": float,
         }
 
     @property
@@ -74,7 +81,9 @@ class BioacousticFeatureExtractor(BaseFeatureExtractor):
         bio_mask = (freqs >= 2000) & (freqs <= 8000)
         mean_spectrum_db = librosa.amplitude_to_db(np.mean(S, axis=1), ref=np.max)
         if np.any(bio_mask):
-            biophony_db = mean_spectrum_db[bio_mask] - np.min(mean_spectrum_db[bio_mask])
+            biophony_db = mean_spectrum_db[bio_mask] - np.min(
+                mean_spectrum_db[bio_mask]
+            )
             bioacoustic_index = float(np.trapz(biophony_db))
         else:
             bioacoustic_index = 0.0
@@ -86,13 +95,21 @@ class BioacousticFeatureExtractor(BaseFeatureExtractor):
         rms_env = librosa.feature.rms(y=y, hop_length=self.hop_length)[0]
         rms_norm = rms_env / max(1e-7, np.sum(rms_env))
         rms_norm = rms_norm[rms_norm > 0]
-        ht = float(-np.sum(rms_norm * np.log2(rms_norm)) / np.log2(len(rms_norm))) if len(rms_norm) > 1 else 0.0
+        ht = (
+            float(-np.sum(rms_norm * np.log2(rms_norm)) / np.log2(len(rms_norm)))
+            if len(rms_norm) > 1
+            else 0.0
+        )
 
         # Spectral entropy Hf
         spec_mean = np.mean(S, axis=0)
         spec_norm = spec_mean / max(1e-7, np.sum(spec_mean))
         spec_norm = spec_norm[spec_norm > 0]
-        hf = float(-np.sum(spec_norm * np.log2(spec_norm)) / np.log2(len(spec_norm))) if len(spec_norm) > 1 else 0.0
+        hf = (
+            float(-np.sum(spec_norm * np.log2(spec_norm)) / np.log2(len(spec_norm)))
+            if len(spec_norm) > 1
+            else 0.0
+        )
 
         acoustic_entropy_h = float(ht * hf)
 
@@ -102,8 +119,10 @@ class BioacousticFeatureExtractor(BaseFeatureExtractor):
         # -------------------------------------------------------------
         anthro_mask = (freqs >= 1000) & (freqs < 2000)
         biophony_power = np.sum(S[bio_mask, :] ** 2) if np.any(bio_mask) else 0.0
-        anthrophony_power = np.sum(S[anthro_mask, :] ** 2) if np.any(anthro_mask) else 0.0
-        
+        anthrophony_power = (
+            np.sum(S[anthro_mask, :] ** 2) if np.any(anthro_mask) else 0.0
+        )
+
         ndsi_denom = biophony_power + anthrophony_power
         ndsi = float((biophony_power - anthrophony_power) / max(1e-7, ndsi_denom))
 
@@ -116,7 +135,9 @@ class BioacousticFeatureExtractor(BaseFeatureExtractor):
         acoustic_occupancy = float(np.sum(active_frames) / max(1, len(active_frames)))
 
         # Onset detect for call density & inter-call intervals
-        onset_frames = librosa.onset.onset_detect(y=y, sr=sr, hop_length=self.hop_length)
+        onset_frames = librosa.onset.onset_detect(
+            y=y, sr=sr, hop_length=self.hop_length
+        )
         onset_times = onset_frames * frame_duration
         duration_sec = len(y) / sr
         call_density = float(len(onset_times) / max(0.001, duration_sec))
@@ -125,13 +146,21 @@ class BioacousticFeatureExtractor(BaseFeatureExtractor):
             ici = np.diff(onset_times)
             ici_mean = float(np.mean(ici))
             ici_std = float(np.std(ici))
-            call_burstiness = float((ici_std - ici_mean) / max(1e-7, ici_std + ici_mean))
+            call_burstiness = float(
+                (ici_std - ici_mean) / max(1e-7, ici_std + ici_mean)
+            )
         else:
             ici_mean, ici_std, call_burstiness = 0.0, 0.0, 0.0
 
         # Chorus Intensity (mean dB in biophony band during active frames)
         if np.any(active_frames) and np.any(bio_mask):
-            chorus_intensity = float(np.mean(librosa.amplitude_to_db(S[bio_mask, :][:, active_frames], ref=np.max)))
+            chorus_intensity = float(
+                np.mean(
+                    librosa.amplitude_to_db(
+                        S[bio_mask, :][:, active_frames], ref=np.max
+                    )
+                )
+            )
         else:
             chorus_intensity = 0.0
 
@@ -139,7 +168,11 @@ class BioacousticFeatureExtractor(BaseFeatureExtractor):
         freq_dist = np.sum(S, axis=1)
         freq_norm = freq_dist / max(1e-7, np.sum(freq_dist))
         freq_norm = freq_norm[freq_norm > 0]
-        soundscape_diversity = float(-np.sum(freq_norm * np.log2(freq_norm))) if len(freq_norm) > 0 else 0.0
+        soundscape_diversity = (
+            float(-np.sum(freq_norm * np.log2(freq_norm)))
+            if len(freq_norm) > 0
+            else 0.0
+        )
 
         return {
             "aci": aci_val,

@@ -34,7 +34,7 @@ class FeatureBenchmarkSuite:
 
         for _ in range(n_repeats):
             t0 = time.time()
-            feats = extractor.extract(y_test, sr)
+            extractor.extract(y_test, sr)
             t1 = time.time()
             runtimes.append(t1 - t0)
 

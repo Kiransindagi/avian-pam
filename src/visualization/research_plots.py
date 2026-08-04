@@ -1,12 +1,12 @@
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import pandas as pd
 from scipy import stats
-from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import List
 from src.config.schema import AppConfig
 from src.utils.io import ensure_dir
 from src.utils.logging import setup_logger
@@ -28,7 +28,9 @@ class ResearchPlotter:
         fig, ax = plt.subplots(figsize=(6, 6))
 
         stats.probplot(residuals, dist="norm", plot=ax)
-        ax.set_title(f"Residual Q-Q Plot ({model_name})", fontsize=12, fontweight="bold")
+        ax.set_title(
+            f"Residual Q-Q Plot ({model_name})", fontsize=12, fontweight="bold"
+        )
         ax.grid(True, linestyle="--", alpha=0.5)
 
         plt.tight_layout()
@@ -36,10 +38,12 @@ class ResearchPlotter:
         plt.close(fig)
         logger.info(f"Saved Q-Q plot to '{out_path}'.")
 
-    def plot_shap_beeswarm(self, shap_values: np.ndarray, feature_names: List[str], top_n: int = 12):
+    def plot_shap_beeswarm(
+        self, shap_values: np.ndarray, feature_names: List[str], top_n: int = 12
+    ):
         """Generates SHAP summary/beeswarm surrogate plot."""
         out_path = self.figures_dir / "shap_beeswarm.png"
-        
+
         # Calculate mean absolute SHAP value per feature
         mean_abs_shap = np.mean(np.abs(shap_values), axis=0)
         idx_sorted = np.argsort(mean_abs_shap)[::-1][:top_n]
@@ -49,8 +53,12 @@ class ResearchPlotter:
 
         fig, ax = plt.subplots(figsize=(8, 6))
         sns.barplot(x=top_scores, y=top_names, palette="magma", ax=ax)
-        ax.set_title("Global SHAP Feature Importance Summary", fontsize=12, fontweight="bold")
-        ax.set_xlabel("mean(|SHAP value|) (Average Impact on Model Output)", fontsize=11)
+        ax.set_title(
+            "Global SHAP Feature Importance Summary", fontsize=12, fontweight="bold"
+        )
+        ax.set_xlabel(
+            "mean(|SHAP value|) (Average Impact on Model Output)", fontsize=11
+        )
 
         plt.tight_layout()
         fig.savefig(out_path, dpi=self.dpi)
@@ -62,14 +70,24 @@ class ResearchPlotter:
         out_path = self.figures_dir / "ablation_comparison.png"
         fig, ax = plt.subplots(figsize=(9, 5))
 
-        sns.barplot(x="cv_mae", y="feature_subset", data=df_ablation, palette="rocket", ax=ax)
-        ax.set_title("Feature Category Ablation Comparison (MAE)", fontsize=13, fontweight="bold")
+        sns.barplot(
+            x="cv_mae", y="feature_subset", data=df_ablation, palette="rocket", ax=ax
+        )
+        ax.set_title(
+            "Feature Category Ablation Comparison (MAE)", fontsize=13, fontweight="bold"
+        )
         ax.set_xlabel("Out-of-Fold Mean Absolute Error (Lower is Better)", fontsize=11)
 
         for p in ax.patches:
             width = p.get_width()
-            ax.annotate(f"{width:.3f}", (width + 0.01, p.get_y() + p.get_height() / 2),
-                        ha="left", va="center", fontsize=9, fontweight="bold")
+            ax.annotate(
+                f"{width:.3f}",
+                (width + 0.01, p.get_y() + p.get_height() / 2),
+                ha="left",
+                va="center",
+                fontsize=9,
+                fontweight="bold",
+            )
 
         plt.tight_layout()
         fig.savefig(out_path, dpi=self.dpi)
@@ -90,7 +108,11 @@ class ResearchPlotter:
             linewidth=2.5,
             ax=ax,
         )
-        ax.set_title("Model Error Degradation under Feature Perturbations", fontsize=12, fontweight="bold")
+        ax.set_title(
+            "Model Error Degradation under Feature Perturbations",
+            fontsize=12,
+            fontweight="bold",
+        )
         ax.set_xlabel("Perturbation Severity Level", fontsize=11)
         ax.set_ylabel("Out-of-Fold MAE", fontsize=11)
         ax.grid(True, linestyle="--", alpha=0.5)
@@ -105,11 +127,23 @@ class ResearchPlotter:
         out_path = self.figures_dir / "calibration_plot.png"
         fig, ax = plt.subplots(figsize=(7, 6))
 
-        ax.scatter(y_true, y_pred, alpha=0.6, color="#2ca02c", edgecolors="k", s=50, label="Predictions")
+        ax.scatter(
+            y_true,
+            y_pred,
+            alpha=0.6,
+            color="#2ca02c",
+            edgecolors="k",
+            s=50,
+            label="Predictions",
+        )
         max_val = max(np.max(y_true), np.max(y_pred)) + 1
         ax.plot([0, max_val], [0, max_val], "k--", label="Perfect Calibration Line")
 
-        ax.set_title(f"Model Count Calibration Curve ({model_name})", fontsize=12, fontweight="bold")
+        ax.set_title(
+            f"Model Count Calibration Curve ({model_name})",
+            fontsize=12,
+            fontweight="bold",
+        )
         ax.set_xlabel("Ground Truth Bird Count", fontsize=11)
         ax.set_ylabel("Calibrated Model Prediction", fontsize=11)
         ax.legend()

@@ -16,7 +16,9 @@ class BioDCASESubmissionGenerator:
     def __init__(self, config: AppConfig, model_checkpoint_path: Optional[Path] = None):
         self.config = config
         self.submissions_dir = ensure_dir(Path("submissions"))
-        self.engine = AvianInferenceEngine(config, model_checkpoint_path=model_checkpoint_path)
+        self.engine = AvianInferenceEngine(
+            config, model_checkpoint_path=model_checkpoint_path
+        )
 
     def generate_submission(self, eval_audio_dir: Union[str, Path]) -> Path:
         """Generates formatted BioDCASE submission CSV file."""
@@ -27,14 +29,18 @@ class BioDCASESubmissionGenerator:
         df_preds = self.engine.predict_batch_dir(eval_audio_dir)
 
         if df_preds.empty:
-            raise ValueError(f"No audio predictions generated from directory '{eval_audio_dir}'.")
+            raise ValueError(
+                f"No audio predictions generated from directory '{eval_audio_dir}'."
+            )
 
         # Format submission DataFrame according to official BioDCASE challenge specification
-        df_sub = pd.DataFrame({
-            "filename": df_preds["filename"],
-            "predicted_bird_count": df_preds["estimated_integer_count"],
-            "raw_count_estimate": df_preds["predicted_bird_count"],
-        })
+        df_sub = pd.DataFrame(
+            {
+                "filename": df_preds["filename"],
+                "predicted_bird_count": df_preds["estimated_integer_count"],
+                "raw_count_estimate": df_preds["predicted_bird_count"],
+            }
+        )
 
         df_sub.to_csv(out_path, index=False)
         sub_hash = compute_file_hash(out_path)

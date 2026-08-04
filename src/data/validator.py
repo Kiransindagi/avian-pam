@@ -1,6 +1,5 @@
-import os
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict
 import pandas as pd
 import soundfile as sf
 from src.config.schema import AppConfig
@@ -18,7 +17,9 @@ class AudioValidator:
             log_file=config.validation.log_file,
         )
 
-    def validate_single_file(self, file_path: Path) -> Dict[str, str | float | int | bool]:
+    def validate_single_file(
+        self, file_path: Path
+    ) -> Dict[str, str | float | int | bool]:
         """Validates individual audio file integrity, properties, and hash."""
         rel_path = str(file_path)
         res = {
@@ -53,10 +54,14 @@ class AudioValidator:
             # Check duration limits
             if info.duration < self.config.audio.min_duration_sec:
                 res["status"] = "WARNING"
-                res["error_msg"] += f"Duration ({info.duration:.2f}s) below minimum threshold; "
+                res["error_msg"] += (
+                    f"Duration ({info.duration:.2f}s) below minimum threshold; "
+                )
             elif info.duration > self.config.audio.max_duration_sec:
                 res["status"] = "WARNING"
-                res["error_msg"] += f"Duration ({info.duration:.2f}s) above maximum threshold; "
+                res["error_msg"] += (
+                    f"Duration ({info.duration:.2f}s) above maximum threshold; "
+                )
 
             # Check extension
             if file_path.suffix.lower() not in self.config.audio.valid_extensions:
@@ -75,7 +80,9 @@ class AudioValidator:
         self.logger.info(f"Starting dataset validation scan in '{raw_dir}'...")
 
         if not raw_dir.exists():
-            self.logger.warning(f"Raw directory '{raw_dir}' does not exist. Returning empty report.")
+            self.logger.warning(
+                f"Raw directory '{raw_dir}' does not exist. Returning empty report."
+            )
             return pd.DataFrame()
 
         audio_files = []
@@ -114,7 +121,11 @@ class AudioValidator:
                 meta_df = pd.read_csv(meta_path)
                 if "filename" in meta_df.columns:
                     meta_filenames = set(meta_df["filename"].astype(str))
-                    scanned_filenames = set(report_df["filename"].astype(str)) if not report_df.empty else set()
+                    scanned_filenames = (
+                        set(report_df["filename"].astype(str))
+                        if not report_df.empty
+                        else set()
+                    )
 
                     missing_on_disk = meta_filenames - scanned_filenames
                     for m_file in missing_on_disk:
@@ -131,7 +142,9 @@ class AudioValidator:
                                 "file_hash": "",
                             }
                         )
-                        self.logger.error(f"[MISSING] File listed in metadata not found: {m_file}")
+                        self.logger.error(
+                            f"[MISSING] File listed in metadata not found: {m_file}"
+                        )
                     report_df = pd.DataFrame(reports)
             except Exception as e:
                 self.logger.error(f"Error reading metadata.csv: {e}")
@@ -141,7 +154,9 @@ class AudioValidator:
         ensure_dir(out_report_path.parent)
         report_df.to_csv(out_report_path, index=False)
 
-        valid_count = (report_df["status"] == "VALID").sum() if not report_df.empty else 0
+        valid_count = (
+            (report_df["status"] == "VALID").sum() if not report_df.empty else 0
+        )
         self.logger.info(
             f"Validation scan complete. Total evaluated: {len(report_df)}. "
             f"Valid: {valid_count}, Warnings/Errors: {len(report_df) - valid_count}. "

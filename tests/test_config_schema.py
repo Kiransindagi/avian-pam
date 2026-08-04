@@ -3,8 +3,6 @@ from pathlib import Path
 from pydantic import ValidationError
 from src.config.schemas import (
     AudioFileContract,
-    ValidationContract,
-    PreprocessingContract,
     FeatureRecordContract,
 )
 

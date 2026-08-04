@@ -2,7 +2,7 @@ import json
 import hashlib
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any
+from typing import Dict
 import pandas as pd
 from src.config.schema import AppConfig
 from src.utils.io import compute_file_hash, ensure_dir
@@ -32,7 +32,6 @@ class DatasetVersionManager:
 
         all_files = list(raw_dir.rglob("*.wav")) + list(raw_dir.rglob("*.flac"))
         file_hashes: Dict[str, str] = {}
-        durations = []
         file_sizes = []
 
         for f in all_files:
@@ -53,7 +52,9 @@ class DatasetVersionManager:
             "created_at": datetime.now().isoformat(),
             "dataset_hash": dataset_hash,
             "num_raw_files": len(all_files),
-            "num_processed_files": len(list(processed_dir.rglob("*.wav"))) if processed_dir.exists() else 0,
+            "num_processed_files": len(list(processed_dir.rglob("*.wav")))
+            if processed_dir.exists()
+            else 0,
             "environment": self.config.project.environment,
         }
         version_path = self.versions_dir / "version.json"
@@ -74,7 +75,9 @@ class DatasetVersionManager:
         stats_data = {
             "total_files": len(all_files),
             "total_size_bytes": sum(file_sizes),
-            "avg_file_size_bytes": float(pd.Series(file_sizes).mean()) if file_sizes else 0.0,
+            "avg_file_size_bytes": float(pd.Series(file_sizes).mean())
+            if file_sizes
+            else 0.0,
             "target_sample_rate": self.config.audio.target_sample_rate,
             "target_channels": self.config.audio.target_channels,
         }

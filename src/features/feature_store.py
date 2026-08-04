@@ -1,12 +1,11 @@
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler, RobustScaler, StandardScaler
 from src.config.schema import AppConfig
-from src.config.schemas import FeatureRecordContract
 from src.utils.io import compute_file_hash, ensure_dir
 from src.utils.logging import setup_logger
 
@@ -28,7 +27,11 @@ class FeatureStore:
     ) -> Tuple[pd.DataFrame, Dict[str, Dict[str, float]]]:
         """Applies normalization (standard, minmax, robust) to numerical feature columns."""
         non_feat_cols = ["file_path", "filename", "species", "bird_count"]
-        feature_cols = [c for c in df.columns if c not in non_feat_cols and np.issubdtype(df[c].dtype, np.number)]
+        feature_cols = [
+            c
+            for c in df.columns
+            if c not in non_feat_cols and np.issubdtype(df[c].dtype, np.number)
+        ]
 
         if not feature_cols:
             return df.copy(), {}
@@ -41,7 +44,9 @@ class FeatureStore:
         elif method == "robust":
             scaler = RobustScaler()
         else:
-            raise ValueError(f"Scaling method '{method}' not supported. Allowed: standard, minmax, robust.")
+            raise ValueError(
+                f"Scaling method '{method}' not supported. Allowed: standard, minmax, robust."
+            )
 
         scaled_values = scaler.fit_transform(scaled_df[feature_cols].fillna(0))
         scaled_df[feature_cols] = scaled_values
@@ -91,7 +96,9 @@ class FeatureStore:
         with open(meta_file, "w", encoding="utf-8") as f:
             json.dump(schema_metadata, f, indent=2)
 
-        logger.info(f"Feature store saved dataset to '{data_file}' ({len(features_df)} rows).")
+        logger.info(
+            f"Feature store saved dataset to '{data_file}' ({len(features_df)} rows)."
+        )
         return data_file, meta_file
 
     def save_feature_bundle(
@@ -110,8 +117,12 @@ class FeatureStore:
         df.to_parquet(raw_path, index=False)
         raw_hash = compute_file_hash(raw_path)
 
-        norm_df, norm_stats = self.normalize_features(df, method=normalization_method or "standard")
-        norm_filename = f"{dataset_name}_norm_{normalization_method}_v{version}_{timestamp}.parquet"
+        norm_df, norm_stats = self.normalize_features(
+            df, method=normalization_method or "standard"
+        )
+        norm_filename = (
+            f"{dataset_name}_norm_{normalization_method}_v{version}_{timestamp}.parquet"
+        )
         norm_path = self.store_dir / norm_filename
         norm_df.to_parquet(norm_path, index=False)
         norm_hash = compute_file_hash(norm_path)
@@ -136,15 +147,21 @@ class FeatureStore:
             "extractor_metadata": extractor_metadata or {},
         }
 
-        meta_path = self.store_dir / f"{dataset_name}_v{version}_{timestamp}_metadata.json"
+        meta_path = (
+            self.store_dir / f"{dataset_name}_v{version}_{timestamp}_metadata.json"
+        )
         with open(meta_path, "w", encoding="utf-8") as f:
             json.dump(provenance_metadata, f, indent=2)
 
-        stats_path = self.store_dir / f"{dataset_name}_v{version}_{timestamp}_statistics.json"
+        stats_path = (
+            self.store_dir / f"{dataset_name}_v{version}_{timestamp}_statistics.json"
+        )
         with open(stats_path, "w", encoding="utf-8") as f:
             json.dump(norm_stats, f, indent=2)
 
-        logger.info(f"Feature Store: Saved raw ({raw_filename}) and normalized ({norm_filename}) bundles.")
+        logger.info(
+            f"Feature Store: Saved raw ({raw_filename}) and normalized ({norm_filename}) bundles."
+        )
 
         return {
             "raw_parquet": raw_path,
@@ -153,7 +170,9 @@ class FeatureStore:
             "statistics_json": stats_path,
         }
 
-    def load_latest_features(self, dataset_name: str = "avian_features") -> Optional[pd.DataFrame]:
+    def load_latest_features(
+        self, dataset_name: str = "avian_features"
+    ) -> Optional[pd.DataFrame]:
         """Loads most recent feature dataset matching dataset_name."""
         files = list(self.store_dir.glob(f"{dataset_name}_*.*"))
         data_files = [f for f in files if f.suffix in [".parquet", ".csv"]]

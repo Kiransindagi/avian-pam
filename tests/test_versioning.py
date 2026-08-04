@@ -1,4 +1,3 @@
-import pytest
 import soundfile as sf
 import numpy as np
 from src.config.schema import AppConfig

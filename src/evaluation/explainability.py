@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Dict, Optional
 from sklearn.inspection import permutation_importance
 from src.config.schema import AppConfig
 from src.models.base_model import BaseAvianModel
@@ -36,8 +36,14 @@ class ExplainabilityEngine:
             scoring="neg_mean_absolute_error",
         )
 
-        cols = list(X.columns) if isinstance(X, pd.DataFrame) else [f"f_{i}" for i in range(X.shape[1])]
-        importances = {col: float(score) for col, score in zip(cols, perm_res.importances_mean)}
+        cols = (
+            list(X.columns)
+            if isinstance(X, pd.DataFrame)
+            else [f"f_{i}" for i in range(X.shape[1])]
+        )
+        importances = {
+            col: float(score) for col, score in zip(cols, perm_res.importances_mean)
+        }
         # Sort descending
         return dict(sorted(importances.items(), key=lambda item: item[1], reverse=True))
 
@@ -49,6 +55,7 @@ class ExplainabilityEngine:
         """Computes SHAP values or surrogate gradient magnitude approximations."""
         try:
             import shap
+
             if hasattr(model, "model"):
                 explainer = shap.Explainer(model.model, X)
                 shap_values = explainer(X)
@@ -63,7 +70,9 @@ class ExplainabilityEngine:
 
         for col_idx, col_name in enumerate(cols):
             weight = imp_dict.get(col_name, 0.01)
-            shap_matrix[:, col_idx] = (X[col_name].to_numpy() - np.mean(X[col_name])) * weight
+            shap_matrix[:, col_idx] = (
+                X[col_name].to_numpy() - np.mean(X[col_name])
+            ) * weight
 
         return shap_matrix
 

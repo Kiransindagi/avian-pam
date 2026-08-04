@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import scipy.stats as stats
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, Optional
 from src.config.schema import AppConfig
 from src.utils.io import ensure_dir
 from src.utils.logging import setup_logger
@@ -26,7 +26,11 @@ class FeatureQualityAnalyzer:
         """Performs full statistical evaluation of extracted features."""
         # Isolate numerical feature columns
         non_feat_cols = ["file_path", "filename", "species", target_col]
-        feature_cols = [c for c in df.columns if c not in non_feat_cols and np.issubdtype(df[c].dtype, np.number)]
+        feature_cols = [
+            c
+            for c in df.columns
+            if c not in non_feat_cols and np.issubdtype(df[c].dtype, np.number)
+        ]
 
         if not feature_cols:
             logger.warning("No numeric feature columns found for quality analysis.")
@@ -47,8 +51,16 @@ class FeatureQualityAnalyzer:
         maxs = X.max().to_dict()
 
         # 3. Distribution Stats (Skewness & Kurtosis)
-        skewness = X.apply(lambda col: float(stats.skew(col.dropna())) if len(col.dropna()) > 2 else 0.0).to_dict()
-        kurtosis = X.apply(lambda col: float(stats.kurtosis(col.dropna())) if len(col.dropna()) > 2 else 0.0).to_dict()
+        skewness = X.apply(
+            lambda col: float(stats.skew(col.dropna()))
+            if len(col.dropna()) > 2
+            else 0.0
+        ).to_dict()
+        kurtosis = X.apply(
+            lambda col: float(stats.kurtosis(col.dropna()))
+            if len(col.dropna()) > 2
+            else 0.0
+        ).to_dict()
 
         # 4. Correlation & Redundancy Analysis
         corr_matrix = X.corr().abs()
@@ -60,7 +72,11 @@ class FeatureQualityAnalyzer:
                 if not np.isnan(val) and val >= correlation_threshold:
                     collinear_pairs.append((f1, f2, round(float(val), 3)))
 
-        redundancy_index = round(len(collinear_pairs) / max(1, len(feature_cols) * (len(feature_cols) - 1) / 2), 4)
+        redundancy_index = round(
+            len(collinear_pairs)
+            / max(1, len(feature_cols) * (len(feature_cols) - 1) / 2),
+            4,
+        )
 
         # 5. Outliers (Z-score > 3.0)
         outlier_counts = {}
@@ -77,10 +93,14 @@ class FeatureQualityAnalyzer:
         if y is not None and y.notnull().any():
             try:
                 from sklearn.feature_selection import mutual_info_regression
+
                 y_clean = y.fillna(y.median())
                 X_clean = X.fillna(X.median())
                 scores = mutual_info_regression(X_clean, y_clean, random_state=42)
-                mi_scores = {col: round(float(score), 4) for col, score in zip(feature_cols, scores)}
+                mi_scores = {
+                    col: round(float(score), 4)
+                    for col, score in zip(feature_cols, scores)
+                }
             except Exception as e:
                 logger.warning(f"Could not compute mutual information: {e}")
 
@@ -113,7 +133,11 @@ class FeatureQualityAnalyzer:
         """Renders comprehensive markdown report: reports/feature_quality_report.md."""
         report_path = self.reports_dir / "feature_quality_report.md"
 
-        low_var_str = ", ".join(summary["low_variance_features"]) if summary["low_variance_features"] else "None"
+        low_var_str = (
+            ", ".join(summary["low_variance_features"])
+            if summary["low_variance_features"]
+            else "None"
+        )
         top_collinear = summary["collinear_pairs"][:10]
 
         collinear_table = ""
@@ -159,8 +183,12 @@ class FeatureQualityAnalyzer:
 ## 4. Top Features by Mutual Information (Target Correlation)
 """
         if summary.get("mutual_information"):
-            sorted_mi = sorted(summary["mutual_information"].items(), key=lambda x: x[1], reverse=True)[:10]
-            content += "\n| Feature Name | Mutual Information Score |\n| :--- | :--- |\n"
+            sorted_mi = sorted(
+                summary["mutual_information"].items(), key=lambda x: x[1], reverse=True
+            )[:10]
+            content += (
+                "\n| Feature Name | Mutual Information Score |\n| :--- | :--- |\n"
+            )
             for f_name, score in sorted_mi:
                 content += f"| `{f_name}` | **{score}** |\n"
         else:

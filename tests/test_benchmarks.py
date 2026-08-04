@@ -1,4 +1,3 @@
-import pytest
 from src.config.schema import AppConfig
 from src.evaluation.benchmark import PipelineTelemetry
 

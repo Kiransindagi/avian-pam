@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import pytest
 from src.config.schema import AppConfig
 from src.models.trees import RandomForestModel
 from src.evaluation.explainability import ExplainabilityEngine

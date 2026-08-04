@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import pytest
 from src.training.optimizer import HyperparameterOptimizer
 
 
