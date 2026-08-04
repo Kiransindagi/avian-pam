@@ -1,0 +1,13 @@
+experiment_id: "exp_001_baseline_dsp"
+name: "Baseline DSP Acoustic Features"
+date: "2026-08-04"
+dataset_version: "v1.0.0"
+feature_set: "dsp"
+parameters:
+  sample_rate: 32000
+  n_mfcc: 13
+  n_fft: 2048
+  hop_length: 512
+metrics:
+  expected_mae: 1.25
+  expected_rmse: 1.68

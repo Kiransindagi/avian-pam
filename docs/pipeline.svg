@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300" width="100%" height="100%" style="background-color: #0d1117; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1f6feb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#238636;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="2" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Title -->
+  <text x="500" y="40" text-anchor="middle" fill="#58a6ff" font-size="20" font-weight="bold">Avian PAM Bioacoustic Execution Pipeline</text>
+
+  <!-- Stage 1: Audio Input & Preprocessing -->
+  <g filter="url(#shadow)">
+    <rect x="40" y="80" width="160" height="150" rx="10" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+    <rect x="40" y="80" width="160" height="35" rx="10" fill="#1f6feb"/>
+    <text x="120" y="102" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">1. Audio Validation</text>
+    <text x="120" y="135" text-anchor="middle" fill="#c9d1d9" font-size="11">WAV Input</text>
+    <text x="120" y="155" text-anchor="middle" fill="#8b949e" font-size="10">Resampling (32kHz)</text>
+    <text x="120" y="175" text-anchor="middle" fill="#8b949e" font-size="10">Normalization</text>
+    <text x="120" y="195" text-anchor="middle" fill="#8b949e" font-size="10">Chunking (3s)</text>
+  </g>
+
+  <!-- Arrow 1 -->
+  <path d="M 200 155 L 230 155" stroke="#58a6ff" stroke-width="2" marker-end="url(#arrow)"/>
+  <polygon points="230,150 240,155 230,160" fill="#58a6ff"/>
+
+  <!-- Stage 2: Feature Engineering -->
+  <g filter="url(#shadow)">
+    <rect x="240" y="80" width="180" height="150" rx="10" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+    <rect x="240" y="80" width="180" height="35" rx="10" fill="#238636"/>
+    <text x="330" y="102" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">2. Feature Extraction</text>
+    <text x="330" y="135" text-anchor="middle" fill="#c9d1d9" font-size="11">DSP Spectral Metrics</text>
+    <text x="330" y="155" text-anchor="middle" fill="#8b949e" font-size="10">Ecoacoustic Indices</text>
+    <text x="330" y="175" text-anchor="middle" fill="#8b949e" font-size="10">BirdNET Embeddings</text>
+    <text x="330" y="195" text-anchor="middle" fill="#8b949e" font-size="10">PANNs Embeddings</text>
+  </g>
+
+  <!-- Arrow 2 -->
+  <path d="M 420 155 L 450 155" stroke="#58a6ff" stroke-width="2"/>
+  <polygon points="450,150 460,155 450,160" fill="#58a6ff"/>
+
+  <!-- Stage 3: Feature Store & Normalization -->
+  <g filter="url(#shadow)">
+    <rect x="460" y="80" width="160" height="150" rx="10" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+    <rect x="460" y="80" width="160" height="35" rx="10" fill="#8957e5"/>
+    <text x="540" y="102" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">3. Feature Store</text>
+    <text x="540" y="135" text-anchor="middle" fill="#c9d1d9" font-size="11">Parquet Bundling</text>
+    <text x="540" y="155" text-anchor="middle" fill="#8b949e" font-size="10">Standard Scaling</text>
+    <text x="540" y="175" text-anchor="middle" fill="#8b949e" font-size="10">Schema Validation</text>
+    <text x="540" y="195" text-anchor="middle" fill="#8b949e" font-size="10">Metadata Sidecar</text>
+  </g>
+
+  <!-- Arrow 3 -->
+  <path d="M 620 155 L 650 155" stroke="#58a6ff" stroke-width="2"/>
+  <polygon points="650,150 660,155 650,160" fill="#58a6ff"/>
+
+  <!-- Stage 4: Inference Engine & Models -->
+  <g filter="url(#shadow)">
+    <rect x="660" y="80" width="160" height="150" rx="10" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+    <rect x="660" y="80" width="160" height="35" rx="10" fill="#da3633"/>
+    <text x="740" y="102" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">4. Inference Engine</text>
+    <text x="740" y="135" text-anchor="middle" fill="#c9d1d9" font-size="11">Gradient Boosting</text>
+    <text x="740" y="155" text-anchor="middle" fill="#8b949e" font-size="10">Group K-Fold Ensembles</text>
+    <text x="740" y="175" text-anchor="middle" fill="#8b949e" font-size="10">FastAPI Server</text>
+    <text x="740" y="195" text-anchor="middle" fill="#8b949e" font-size="10">Batch Submission</text>
+  </g>
+
+  <!-- Arrow 4 -->
+  <path d="M 820 155 L 850 155" stroke="#58a6ff" stroke-width="2"/>
+  <polygon points="850,150 860,155 850,160" fill="#58a6ff"/>
+
+  <!-- Stage 5: Outputs -->
+  <g filter="url(#shadow)">
+    <rect x="860" y="80" width="100" height="150" rx="10" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+    <rect x="860" y="80" width="100" height="35" rx="10" fill="#f0883e"/>
+    <text x="910" y="102" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">5. Output</text>
+    <text x="910" y="135" text-anchor="middle" fill="#c9d1d9" font-size="11">Bird Count</text>
+    <text x="910" y="155" text-anchor="middle" fill="#8b949e" font-size="10">CSV Submission</text>
+    <text x="910" y="175" text-anchor="middle" fill="#8b949e" font-size="10">JSON API Response</text>
+  </g>
+</svg>

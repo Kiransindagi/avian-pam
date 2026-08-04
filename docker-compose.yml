@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  avian-pam-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: avian_pam_rest_api
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./data:/app/data
+      - ./artifacts:/app/artifacts
+      - ./reports:/app/reports
+      - ./submissions:/app/submissions
+    restart: unless-stopped

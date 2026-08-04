@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata from this file."
+title: "Avian Passive Acoustic Monitoring (PAM) Population Estimation Platform"
+version: 1.0.0
+date-released: 2026-08-04
+authors:
+  - name: "Avian Bioacoustics Research Engineering Team"
+url: "https://github.com/Kiransindagi/avian-pam"
+repository-code: "https://github.com/Kiransindagi/avian-pam"
+license: MIT
+keywords:
+  - bioacoustics
+  - passive-acoustic-monitoring
+  - machine-learning
+  - birdNET
+  - ecoacoustics
+  - biodcase
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Avian Bioacoustics Team"
+      given-names: "ML Research Group"
+  title: "Production Machine Learning for Avian Population Estimation: A Bioacoustic Benchmark"
+  journal: "BioDCASE Machine Learning Research"
+  year: 2026

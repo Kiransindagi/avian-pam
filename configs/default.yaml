@@ -1,0 +1,50 @@
+project:
+  name: "BioDCASE2026_Avian_Counting"
+  version: "1.0.0"
+  seed: 42
+
+paths:
+  raw_data_dir: "data/raw"
+  processed_data_dir: "data/processed"
+  feature_store_dir: "data/feature_store"
+  reports_dir: "reports"
+  figures_dir: "reports/figures"
+  metadata_filename: "metadata.csv"
+
+audio:
+  target_sample_rate: 32000
+  target_channels: 1
+  target_duration_sec: 5.0
+  min_duration_sec: 1.0
+  max_duration_sec: 60.0
+  valid_extensions: [".wav", ".flac", ".ogg", ".mp3"]
+
+preprocessing:
+  resample: true
+  normalize_audio: true
+  normalization_type: "peak"  # peak or rms
+  target_peak_db: -3.0
+  target_rms_db: -20.0
+  trim_silence: true
+  silence_threshold_db: -40.0
+  remove_noise: false
+  filter_cutoff_hz: 500
+
+validation:
+  strict_mode: false
+  hash_algorithm: "md5"
+  report_file: "reports/validation_report.csv"
+  log_file: "reports/validation.log"
+
+eda:
+  generate_figures: true
+  top_n_species: 10
+  dpi: 300
+
+features:
+  active_extractors: ["dsp", "birdnet_stub"]
+  n_mfcc: 13
+  n_fft: 2048
+  hop_length: 512
+  n_mels: 128
+  store_format: "parquet"  # parquet or csv

@@ -1,0 +1,11 @@
+recording_id,aviary,chunk,filename,relative_path,bird_count,species,duration_sec,sample_rate,recording_time
+dev_aviary_1_rec_d1_00_00_01.000000.wav,dev_aviary_1,chunk_000,rec_d1_00_00_01.000000.wav,dev_aviary_1\chunk_000\rec_d1_00_00_01.000000.wav,5,Turdo merula,2.78,32000,2026-06-01T08:00:00
+dev_aviary_1_rec_d1_00_00_02.000000.wav,dev_aviary_1,chunk_000,rec_d1_00_00_02.000000.wav,dev_aviary_1\chunk_000\rec_d1_00_00_02.000000.wav,5,Turdo merula,2.52,32000,2026-06-01T08:05:00
+dev_aviary_1_rec_d1_00_00_03.000000.wav,dev_aviary_1,chunk_000,rec_d1_00_00_03.000000.wav,dev_aviary_1\chunk_000\rec_d1_00_00_03.000000.wav,2,Erithacus rubecula,2.84,32000,2026-06-01T08:10:00
+dev_aviary_1_rec_d1_00_00_04.000000.wav,dev_aviary_1,chunk_000,rec_d1_00_00_04.000000.wav,dev_aviary_1\chunk_000\rec_d1_00_00_04.000000.wav,6,Parus major,3.49,32000,2026-06-01T08:15:00
+dev_aviary_1_rec_d1_00_00_05.000000.wav,dev_aviary_1,chunk_000,rec_d1_00_00_05.000000.wav,dev_aviary_1\chunk_000\rec_d1_00_00_05.000000.wav,7,Passer domesticus,3.08,32000,2026-06-01T08:20:00
+dev_aviary_2_rec_d2_00_00_01.000000.wav,dev_aviary_2,chunk_000,rec_d2_00_00_01.000000.wav,dev_aviary_2\chunk_000\rec_d2_00_00_01.000000.wav,2,Turdo merula,2.89,32000,2026-06-01T08:00:00
+dev_aviary_2_rec_d2_00_00_02.000000.wav,dev_aviary_2,chunk_000,rec_d2_00_00_02.000000.wav,dev_aviary_2\chunk_000\rec_d2_00_00_02.000000.wav,3,Erithacus rubecula,2.83,32000,2026-06-01T08:05:00
+dev_aviary_2_rec_d2_00_00_03.000000.wav,dev_aviary_2,chunk_000,rec_d2_00_00_03.000000.wav,dev_aviary_2\chunk_000\rec_d2_00_00_03.000000.wav,1,Passer domesticus,3.46,32000,2026-06-01T08:10:00
+dev_aviary_2_rec_d2_00_00_04.000000.wav,dev_aviary_2,chunk_000,rec_d2_00_00_04.000000.wav,dev_aviary_2\chunk_000\rec_d2_00_00_04.000000.wav,6,Passer domesticus,3.45,32000,2026-06-01T08:15:00
+dev_aviary_2_rec_d2_00_00_05.000000.wav,dev_aviary_2,chunk_000,rec_d2_00_00_05.000000.wav,dev_aviary_2\chunk_000\rec_d2_00_00_05.000000.wav,1,Erithacus rubecula,2.73,32000,2026-06-01T08:20:00

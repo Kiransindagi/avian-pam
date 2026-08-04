@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Logs
+logs/
+*.log
+
+# Runtime
+cache/
+outputs/
+mlruns/
+artifacts/
+checkpoints/
+
+# Data
+data/processed/
+data/feature_store/*
+!data/feature_store/.gitkeep
+
+# Reports
+reports/*.json
+reports/*.csv
+
+# Models
+models/
+*.joblib
+*.pkl
+*.onnx
+*.pt
+
+# Submissions
+submissions/*
+!submissions/.gitkeep
+
+# Notebook
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

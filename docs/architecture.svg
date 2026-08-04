@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="900" height="520" viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="900" height="520" fill="#0d1117" rx="12"/>
+  
+  <!-- Title -->
+  <text x="450" y="40" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#58a6ff" text-anchor="middle">
+    BioDCASE 2026 Avian PAM Pipeline Architecture
+  </text>
+  
+  <!-- Flow Container -->
+  <!-- 1. Raw Audio Data -->
+  <g transform="translate(40, 100)">
+    <rect width="220" height="90" fill="#161b22" stroke="#30363d" stroke-width="2" rx="8"/>
+    <text x="110" y="35" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#79c0ff" text-anchor="middle">1. Raw Bioacoustics</text>
+    <text x="110" y="60" font-family="Arial, sans-serif" font-size="11" fill="#8b949e" text-anchor="middle">data/raw (WAV / FLAC)</text>
+  </g>
+  
+  <!-- Arrow 1 -> 2 -->
+  <path d="M 260 145 L 320 145" stroke="#58a6ff" stroke-width="3" marker-end="url(#arrow)"/>
+  
+  <!-- 2. Audio Validator -->
+  <g transform="translate(320, 100)">
+    <rect width="240" height="90" fill="#161b22" stroke="#da3633" stroke-width="2" rx="8"/>
+    <text x="120" y="35" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ff7b72" text-anchor="middle">2. AudioValidator</text>
+    <text x="120" y="60" font-family="Arial, sans-serif" font-size="11" fill="#8b949e" text-anchor="middle">MD5 / Duration / Integrity Checks</text>
+  </g>
+  
+  <!-- Arrow 2 -> 3 -->
+  <path d="M 560 145 L 620 145" stroke="#58a6ff" stroke-width="3" marker-end="url(#arrow)"/>
+  
+  <!-- 3. Audio Preprocessor -->
+  <g transform="translate(620, 100)">
+    <rect width="240" height="90" fill="#161b22" stroke="#3fb950" stroke-width="2" rx="8"/>
+    <text x="120" y="35" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#56d364" text-anchor="middle">3. AudioPreprocessor</text>
+    <text x="120" y="60" font-family="Arial, sans-serif" font-size="11" fill="#8b949e" text-anchor="middle">32kHz Mono / Peak Norm / Silence</text>
+  </g>
+  
+  <!-- Arrow Down from 3 to 4 -->
+  <path d="M 740 190 L 740 270" stroke="#58a6ff" stroke-width="3" marker-end="url(#arrow)"/>
+  
+  <!-- 4. Feature Extractor Plugin Registry -->
+  <g transform="translate(620, 270)">
+    <rect width="240" height="100" fill="#161b22" stroke="#d29922" stroke-width="2" rx="8"/>
+    <text x="120" y="35" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#e3b341" text-anchor="middle">4. Feature Plugin Registry</text>
+    <text x="120" y="60" font-family="Arial, sans-serif" font-size="11" fill="#8b949e" text-anchor="middle">DSP / BirdNET Stub / ARIA</text>
+    <text x="120" y="80" font-family="Arial, sans-serif" font-size="10" fill="#d29922" text-anchor="middle">@register_extractor</text>
+  </g>
+  
+  <!-- Arrow 4 -> 5 -->
+  <path d="M 620 320 L 560 320" stroke="#58a6ff" stroke-width="3" marker-end="url(#arrow)"/>
+  
+  <!-- 5. Feature Store -->
+  <g transform="translate(320, 270)">
+    <rect width="240" height="100" fill="#161b22" stroke="#a371f7" stroke-width="2" rx="8"/>
+    <text x="120" y="35" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#bc8cff" text-anchor="middle">5. Feature Store &amp; Versioning</text>
+    <text x="120" y="60" font-family="Arial, sans-serif" font-size="11" fill="#8b949e" text-anchor="middle">Parquet / CSV + Schema Sidecar</text>
+    <text x="120" y="80" font-family="Arial, sans-serif" font-size="10" fill="#bc8cff" text-anchor="middle">data/versions/version.json</text>
+  </g>
+  
+  <!-- Arrow 5 -> 6 -->
+  <path d="M 320 320 L 260 320" stroke="#58a6ff" stroke-width="3" marker-end="url(#arrow)"/>
+  
+  <!-- 6. Quality Dashboard & Telemetry -->
+  <g transform="translate(40, 270)">
+    <rect width="220" height="100" fill="#161b22" stroke="#238636" stroke-width="2" rx="8"/>
+    <text x="110" y="35" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#3fb950" text-anchor="middle">6. Telemetry &amp; Dashboard</text>
+    <text x="110" y="60" font-family="Arial, sans-serif" font-size="11" fill="#8b949e" text-anchor="middle">quality_dashboard.md</text>
+    <text x="110" y="80" font-family="Arial, sans-serif" font-size="10" fill="#8b949e" text-anchor="middle">pipeline_metadata.json</text>
+  </g>
+  
+  <!-- Footer Note -->
+  <text x="450" y="470" font-family="Arial, sans-serif" font-size="12" fill="#8b949e" text-anchor="middle">
+    SOLID Architecture • Pydantic Data Contracts • Versioned Artifact Registry
+  </text>
+  
+  <!-- Marker Definition -->
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#58a6ff"/>
+    </marker>
+  </defs>
+</svg>

@@ -1,0 +1,11 @@
+experiment_id: "exp_002_deep_embedding_stub"
+name: "BirdNET Stub Bioacoustic Embeddings"
+date: "2026-08-04"
+dataset_version: "v1.0.0"
+feature_set: "birdnet_stub"
+parameters:
+  sample_rate: 32000
+  embedding_dim: 8
+metrics:
+  expected_mae: 0.95
+  expected_rmse: 1.32

@@ -1,0 +1,58 @@
+project:
+  name: "BioDCASE2026_Avian_Counting_DEV"
+  version: "2.0.0-dev"
+  seed: 42
+  environment: "development"
+
+paths:
+  raw_data_dir: "data/raw"
+  processed_data_dir: "data/processed"
+  intermediate_dir: "data/intermediate"
+  feature_store_dir: "data/feature_store"
+  artifacts_dir: "artifacts"
+  reports_dir: "reports"
+  figures_dir: "reports/figures"
+  logs_dir: "logs"
+  metadata_filename: "metadata.csv"
+
+audio:
+  target_sample_rate: 32000
+  target_channels: 1
+  target_duration_sec: 5.0
+  min_duration_sec: 0.5
+  max_duration_sec: 300.0
+  valid_extensions: [".wav", ".flac", ".ogg", ".mp3"]
+
+preprocessing:
+  resample: true
+  normalize_audio: true
+  normalization_type: "peak"
+  target_peak_db: -3.0
+  target_rms_db: -20.0
+  trim_silence: true
+  silence_threshold_db: -40.0
+  remove_noise: false
+  filter_cutoff_hz: 500
+
+validation:
+  strict_mode: false
+  hash_algorithm: "md5"
+  report_file: "reports/validation_report.csv"
+  log_file: "logs/validation.log"
+
+eda:
+  generate_figures: true
+  top_n_species: 10
+  dpi: 150
+
+features:
+  active_extractors: ["dsp", "bioacoustics", "birdnet_embeddings", "panns_embeddings"]
+  n_mfcc: 13
+  n_fft: 2048
+  hop_length: 512
+  n_mels: 64
+  store_format: "parquet"
+  normalization_method: "standard"
+  feature_selector: "correlation_filter"
+  variance_threshold: 0.0001
+  correlation_threshold: 0.85
