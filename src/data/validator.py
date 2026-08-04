@@ -54,14 +54,14 @@ class AudioValidator:
             # Check duration limits
             if info.duration < self.config.audio.min_duration_sec:
                 res["status"] = "WARNING"
-                res["error_msg"] += (
-                    f"Duration ({info.duration:.2f}s) below minimum threshold; "
-                )
+                res[
+                    "error_msg"
+                ] += f"Duration ({info.duration:.2f}s) below minimum threshold; "
             elif info.duration > self.config.audio.max_duration_sec:
                 res["status"] = "WARNING"
-                res["error_msg"] += (
-                    f"Duration ({info.duration:.2f}s) above maximum threshold; "
-                )
+                res[
+                    "error_msg"
+                ] += f"Duration ({info.duration:.2f}s) above maximum threshold; "
 
             # Check extension
             if file_path.suffix.lower() not in self.config.audio.valid_extensions:

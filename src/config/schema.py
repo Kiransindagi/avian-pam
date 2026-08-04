@@ -1,5 +1,8 @@
-from typing import List
+from __future__ import annotations
+
 from pathlib import Path
+from typing import List, Union
+
 import yaml
 from pydantic import BaseModel, Field
 
@@ -85,7 +88,7 @@ class AppConfig(BaseModel):
     features: FeaturesConfig = Field(default_factory=FeaturesConfig)
 
     @classmethod
-    def load_from_yaml(cls, yaml_path: str | Path) -> "AppConfig":
+    def load_from_yaml(cls, yaml_path: Union[str, Path]) -> AppConfig:
         path = Path(yaml_path)
         if not path.exists():
             raise FileNotFoundError(f"Configuration file not found: {path}")
