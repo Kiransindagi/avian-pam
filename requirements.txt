@@ -20,6 +20,7 @@ psutil>=5.9.0
 tqdm>=4.64.0
 pytest>=7.0.0
 pytest-cov>=4.0.0
-black>=23.0.0
+black==23.7.0
 isort>=5.11.0
 flake8>=6.0.0
+
