@@ -18,12 +18,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get update && sudo apt-get install -y libsndfile1 ffmpeg
+          sudo apt-get update || true
+          sudo apt-get install -y --no-install-recommends libsndfile1 ffmpeg
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest-cov
           pip install -e .
 
       - name: Execute Tests with Coverage
         run: |
-          PYTHONPATH=. pytest tests/ --cov=src --cov-report=term-missing
+          PYTHONPATH=. pytest tests/ -v --cov=src --cov-report=term-missing
