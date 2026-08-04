@@ -14,10 +14,10 @@ jobs:
         python-version: ["3.9", "3.10"]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -37,9 +37,6 @@ jobs:
           python -m src.cli --generate-dummy
           python cli.py --config configs/development.yaml pipeline
 
-
-
       - name: Run Pytest Test Suite
         run: |
           PYTHONPATH=. pytest tests/ -v
-

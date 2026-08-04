@@ -57,6 +57,7 @@ avian-pam = "src.cli:main"
 
 [tool.pytest.ini_options]
 minversion = "7.0"
-addopts = "-ra -q --import-mode=importlib"
+addopts = "-ra -q"
 testpaths = ["tests"]
 pythonpath = ["."]
+
